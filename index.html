@@ -95,7 +95,7 @@ main { flex: 1; max-width: 600px; width: 100%; margin: 0 auto; padding: 14px 12p
 input, textarea, select { width: 100%; background: #F8FAFC; border: 1px solid var(--border-color); border-radius: 10px; padding: 10px 12px; font-size: 13px; font-weight: 600; color: var(--text-main); outline: none; }
 input:focus, textarea:focus { border-color: var(--accent); background: #FFFFFF; }
 
-/* Exercise Card Styles - Green highlight on completion */
+/* Exercise Card Styles */
 .exercise-card {
   margin-top: 12px;
   padding: 12px 14px;
@@ -161,8 +161,8 @@ input:focus, textarea:focus { border-color: var(--accent); background: #FFFFFF; 
   100% { transform: scale(0.95); opacity: 0.8; }
 }
 
-/* Bottom Nav (5 Tabs) */
-nav.bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; background: rgba(255,255,255,0.98); backdrop-filter: blur(10px); border-top: 1px solid var(--border-color); z-index: 40; display: flex; justify-content: space-around; padding: 8px 6px; }
+/* Bottom Nav (5 Clean Tabs) */
+nav.bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; background: rgba(255,255,255,0.98); backdrop-filter: blur(10px); border-top: 1px solid var(--border-color); z-index: 40; display: flex; justify-content: space-around; padding: 8px 4px; }
 .nav-item {
   background: transparent !important;
   border: 1px solid transparent !important;
@@ -427,14 +427,14 @@ nav.bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; background: rgba
         <div id="sentiment-log-container" style="display: flex; flex-direction: column; gap: 8px;"></div>
       </div>
 
-      <!-- GUIDED MINDFULNESS & MEDITATION (AMBIENT RAIN & CHIMES) -->
+      <!-- MEDITATION (AMBIENT MUSIC SYNTHESIZER & BELLS) -->
       <div style="border-top: 1px solid var(--border-color); padding-top: 16px;">
         <div class="row" style="margin-bottom: 6px;">
           <div>
-            <h3 style="font-size: 14px; font-weight: 800;">Soothing Rain Meditation</h3>
-            <p style="font-size: 11px; color: var(--text-muted);">Calming procedural rain sound & bell timers</p>
+            <h3 style="font-size: 14px; font-weight: 800;">Calm Meditation Music</h3>
+            <p style="font-size: 11px; color: var(--text-muted);">Warm 432 Hz harmonic pad drone & Tibetan singing bells</p>
           </div>
-          <span class="badge badge-emerald">🌧️ Ambient Rain</span>
+          <span class="badge badge-purple">🎵 432 Hz Ambient</span>
         </div>
 
         <div style="background: #F8FAFC; border: 1px solid var(--border-color); border-radius: 14px; padding: 16px; text-align: center; margin-top: 10px;">
@@ -451,12 +451,12 @@ nav.bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; background: rgba
           </div>
 
           <p id="med-caption" style="font-size: 11px; color: var(--text-muted); margin-bottom: 14px; min-height: 28px; line-height: 1.4;">
-            Close your eyes. Steady, relaxing rain sounds will wash away fatigue and calm your mind.
+            Close your eyes. Relaxing ambient music swells gently to downregulate your nervous system.
           </p>
 
           <div class="row" style="justify-content: center; gap: 10px;">
-            <button id="btn-toggle-med" onclick="toggleMeditationSession()" class="btn btn-emerald" style="min-width: 150px; font-size: 12px;">
-              ▶ Begin Rain Session
+            <button id="btn-toggle-med" onclick="toggleMeditationSession()" class="btn btn-emerald" style="min-width: 160px; font-size: 12px;">
+              ▶ Begin Ambient Session
             </button>
             <button onclick="playMeditationChime(432)" class="btn btn-outline" style="font-size: 12px; padding: 8px 12px;" title="Test Harmonic Bell">
               🔔 Test Bell
@@ -467,33 +467,48 @@ nav.bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; background: rgba
     </div>
   </section>
 
-  <!-- TAB: TRENDS (NEW DEDICATED DASHBOARD) -->
+  <!-- TAB: TRENDS (FULL SUITE DASHBOARD & ANALYTICS) -->
   <section id="tab-trends" class="hidden">
     <div class="card">
       <div class="row" style="margin-bottom: 12px;">
         <div>
-          <span class="badge badge-blue">Analytics & Progression</span>
-          <h2 style="font-size: 17px; font-weight: 800; margin-top: 4px;">Trends & Dashboard</h2>
-          <p style="font-size: 11px; color: var(--text-muted);">Bodyweight telemetry, historical checks & AI exports</p>
+          <span class="badge badge-blue">Performance & Recovery Insights</span>
+          <h2 style="font-size: 17px; font-weight: 800; margin-top: 4px;">Trends & Analytics Suite</h2>
+          <p style="font-size: 11px; color: var(--text-muted);">Empirical telemetry across bodyweight, engine, and readiness</p>
         </div>
         <button onclick="openWeightModal()" class="btn btn-outline" style="font-size: 11px; padding: 6px 10px;">
           + Log Weight
         </button>
       </div>
 
+      <!-- Algorithmic Coach Advisory Box -->
+      <div style="background: #EFF6FF; border: 1px solid #BFDBFE; border-radius: 12px; padding: 12px; margin-bottom: 14px;">
+        <div class="row" style="margin-bottom: 4px;">
+          <span style="font-size: 11px; font-weight: 800; color: #1D4ED8;">🧠 Apex Readiness Advisory</span>
+          <span class="badge badge-emerald" id="trend-readiness-badge">Optimal</span>
+        </div>
+        <p id="trend-readiness-msg" style="font-size: 11px; color: #1E40AF; line-height: 1.4;">
+          Calculating your weekly readiness telemetry based on logged workouts, nutrition adherence, and fatigue scores...
+        </p>
+      </div>
+
       <!-- Quick Metrics Summary Tiles -->
-      <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 14px;">
-        <div style="background: #F8FAFC; border: 1px solid var(--border-color); border-radius: 12px; padding: 10px 8px; text-align: center;">
-          <div style="font-size: 10px; font-weight: 700; color: var(--text-muted); text-transform: uppercase;">Latest</div>
-          <div id="trend-tile-latest" style="font-size: 15px; font-weight: 800; color: var(--text-main); font-family: 'JetBrains Mono', monospace; margin-top: 2px;">84.9 kg</div>
+      <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; margin-bottom: 14px;">
+        <div style="background: #F8FAFC; border: 1px solid var(--border-color); border-radius: 10px; padding: 8px 4px; text-align: center;">
+          <div style="font-size: 9px; font-weight: 700; color: var(--text-muted); text-transform: uppercase;">Current</div>
+          <div id="trend-tile-latest" style="font-size: 13px; font-weight: 800; color: var(--text-main); font-family: 'JetBrains Mono', monospace; margin-top: 2px;">84.9kg</div>
         </div>
-        <div style="background: #F8FAFC; border: 1px solid var(--border-color); border-radius: 12px; padding: 10px 8px; text-align: center;">
-          <div style="font-size: 10px; font-weight: 700; color: var(--text-muted); text-transform: uppercase;">7-Day Avg</div>
-          <div id="trend-tile-avg" style="font-size: 15px; font-weight: 800; color: var(--accent); font-family: 'JetBrains Mono', monospace; margin-top: 2px;">-- kg</div>
+        <div style="background: #F8FAFC; border: 1px solid var(--border-color); border-radius: 10px; padding: 8px 4px; text-align: center;">
+          <div style="font-size: 9px; font-weight: 700; color: var(--text-muted); text-transform: uppercase;">7D Avg</div>
+          <div id="trend-tile-avg" style="font-size: 13px; font-weight: 800; color: var(--accent); font-family: 'JetBrains Mono', monospace; margin-top: 2px;">-- kg</div>
         </div>
-        <div style="background: #F8FAFC; border: 1px solid var(--border-color); border-radius: 12px; padding: 10px 8px; text-align: center;">
-          <div style="font-size: 10px; font-weight: 700; color: var(--text-muted); text-transform: uppercase;">Logs Count</div>
-          <div id="trend-tile-count" style="font-size: 15px; font-weight: 800; color: var(--accent-emerald); font-family: 'JetBrains Mono', monospace; margin-top: 2px;">0</div>
+        <div style="background: #F8FAFC; border: 1px solid var(--border-color); border-radius: 10px; padding: 8px 4px; text-align: center;">
+          <div style="font-size: 9px; font-weight: 700; color: var(--text-muted); text-transform: uppercase;">Weekly Δ</div>
+          <div id="trend-tile-delta" style="font-size: 13px; font-weight: 800; color: var(--accent-emerald); font-family: 'JetBrains Mono', monospace; margin-top: 2px;">0.0kg</div>
+        </div>
+        <div style="background: #F8FAFC; border: 1px solid var(--border-color); border-radius: 10px; padding: 8px 4px; text-align: center;">
+          <div style="font-size: 9px; font-weight: 700; color: var(--text-muted); text-transform: uppercase;">Workouts</div>
+          <div id="trend-tile-workouts" style="font-size: 13px; font-weight: 800; color: var(--accent-purple); font-family: 'JetBrains Mono', monospace; margin-top: 2px;">0/7</div>
         </div>
       </div>
 
@@ -504,6 +519,87 @@ nav.bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; background: rgba
           <span class="badge badge-emerald" id="trend-canvas-range">Live Scaling</span>
         </div>
         <canvas id="trends-chart-canvas" style="width: 100%; height: 160px; display: block;"></canvas>
+      </div>
+
+      <!-- STANDARD MODE ONLY: ESTIMATED 1RM STRENGTH PROFILER -->
+      <div id="trend-strength-section" style="background: #F8FAFC; border: 1px solid var(--border-color); border-radius: 14px; padding: 14px; margin-bottom: 14px;">
+        <div class="row" style="margin-bottom: 8px;">
+          <h3 style="font-size: 12px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-muted);">Estimated 1RM Strength Profiler</h3>
+          <span class="badge badge-blue">Epley Formula</span>
+        </div>
+        <p style="font-size: 10px; color: var(--text-muted); margin-bottom: 10px;">Calculated dynamically from your working strength sets</p>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+          <div style="background: white; border: 1px solid var(--border-color); border-radius: 10px; padding: 10px;">
+            <div style="font-size: 10px; font-weight: 700; color: var(--text-muted);">Bench Press (Wed)</div>
+            <div id="1rm-bench-val" style="font-size: 16px; font-weight: 800; font-family: 'JetBrains Mono', monospace; color: var(--text-main); margin-top: 2px;">122.5 kg</div>
+            <div id="1rm-bench-sub" style="font-size: 9px; color: var(--accent); font-weight: 700; margin-top: 2px;">Working: 105kg × 5</div>
+          </div>
+          <div style="background: white; border: 1px solid var(--border-color); border-radius: 10px; padding: 10px;">
+            <div style="font-size: 10px; font-weight: 700; color: var(--text-muted);">Back Squat (Sun)</div>
+            <div id="1rm-squat-val" style="font-size: 16px; font-weight: 800; font-family: 'JetBrains Mono', monospace; color: var(--text-main); margin-top: 2px;">121.0 kg</div>
+            <div id="1rm-squat-sub" style="font-size: 9px; color: var(--accent); font-weight: 700; margin-top: 2px;">Working: 110kg × 3</div>
+          </div>
+          <div style="background: white; border: 1px solid var(--border-color); border-radius: 10px; padding: 10px;">
+            <div style="font-size: 10px; font-weight: 700; color: var(--text-muted);">Military Press (Wed)</div>
+            <div id="1rm-ohp-val" style="font-size: 16px; font-weight: 800; font-family: 'JetBrains Mono', monospace; color: var(--text-main); margin-top: 2px;">75.0 kg</div>
+            <div id="1rm-ohp-sub" style="font-size: 9px; color: var(--accent); font-weight: 700; margin-top: 2px;">Working: 62.5kg × 6</div>
+          </div>
+          <div style="background: white; border: 1px solid var(--border-color); border-radius: 10px; padding: 10px;">
+            <div style="font-size: 10px; font-weight: 700; color: var(--text-muted);">Romanian Deadlift (Sun)</div>
+            <div id="1rm-rdl-val" style="font-size: 16px; font-weight: 800; font-family: 'JetBrains Mono', monospace; color: var(--text-main); margin-top: 2px;">144.0 kg</div>
+            <div id="1rm-rdl-sub" style="font-size: 9px; color: var(--accent); font-weight: 700; margin-top: 2px;">Working: 120kg × 6</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- HYROX BLOCK ONLY: HYROX ENGINE BENCHMARKS TELEMETRY -->
+      <div id="trend-hyrox-section" class="hidden" style="background: #FEF2F2; border: 1px solid #FECACA; border-radius: 14px; padding: 14px; margin-bottom: 14px;">
+        <div class="row" style="margin-bottom: 8px;">
+          <h3 style="font-size: 12px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; color: #991B1B;">Hyrox Station Telemetry</h3>
+          <span class="badge badge-red">Hyrox Block Only</span>
+        </div>
+        <p style="font-size: 10px; color: #7F1D1D; margin-bottom: 10px;">Station split times and pace targets for event simulation</p>
+        <div style="display: flex; flex-direction: column; gap: 6px;">
+          <div class="row" style="background: white; padding: 8px 10px; border-radius: 8px; border: 1px solid #FEE2E2; font-size: 11px;">
+            <span style="font-weight: 700; color: #991B1B;">1km Compromised Run Pace</span>
+            <span id="trend-hyrox-pace" style="font-family: 'JetBrains Mono', monospace; font-weight: 800; color: var(--text-main);">Target: 12.6–13.0 km/h</span>
+          </div>
+          <div class="row" style="background: white; padding: 8px 10px; border-radius: 8px; border: 1px solid #FEE2E2; font-size: 11px;">
+            <span style="font-weight: 700; color: #991B1B;">SkiErg 1000m Split (Damper 5)</span>
+            <span id="trend-hyrox-skierg" style="font-family: 'JetBrains Mono', monospace; font-weight: 800; color: var(--text-main);">Target: 2:04 / 500m</span>
+          </div>
+          <div class="row" style="background: white; padding: 8px 10px; border-radius: 8px; border: 1px solid #FEE2E2; font-size: 11px;">
+            <span style="font-weight: 700; color: #991B1B;">Sled Push 4x25m (102kg)</span>
+            <span id="trend-hyrox-sled" style="font-family: 'JetBrains Mono', monospace; font-weight: 800; color: var(--text-main);">Target: &lt; 2:45</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Recovery & Fueling Insights Card -->
+      <div style="background: #F8FAFC; border: 1px solid var(--border-color); border-radius: 14px; padding: 14px; margin-bottom: 14px;">
+        <h3 style="font-size: 12px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-muted); margin-bottom: 10px;">Recovery & Fueling Baseline</h3>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+          <div style="background: white; border: 1px solid var(--border-color); border-radius: 10px; padding: 10px;">
+            <div style="font-size: 10px; font-weight: 700; color: var(--text-muted);">💤 Avg Sleep Duration</div>
+            <div id="insight-sleep-val" style="font-size: 15px; font-weight: 800; font-family: 'JetBrains Mono', monospace; color: var(--text-main); margin-top: 2px;">7.5 hrs</div>
+            <div style="font-size: 9px; color: var(--accent-emerald); font-weight: 700; margin-top: 2px;">Target: 7.5h+</div>
+          </div>
+          <div style="background: white; border: 1px solid var(--border-color); border-radius: 10px; padding: 10px;">
+            <div style="font-size: 10px; font-weight: 700; color: var(--text-muted);">❤️ Resting Heart Rate</div>
+            <div id="insight-rhr-val" style="font-size: 15px; font-weight: 800; font-family: 'JetBrains Mono', monospace; color: var(--accent); margin-top: 2px;">52 bpm</div>
+            <div style="font-size: 9px; color: var(--text-muted); font-weight: 700; margin-top: 2px;">Baseline: 50–54</div>
+          </div>
+          <div style="background: white; border: 1px solid var(--border-color); border-radius: 10px; padding: 10px;">
+            <div style="font-size: 10px; font-weight: 700; color: var(--text-muted);">🍗 Avg Daily Protein</div>
+            <div id="insight-protein-val" style="font-size: 15px; font-weight: 800; font-family: 'JetBrains Mono', monospace; color: var(--accent-emerald); margin-top: 2px;">-- g</div>
+            <div style="font-size: 9px; color: var(--text-muted); font-weight: 700; margin-top: 2px;">Target: 180g+</div>
+          </div>
+          <div style="background: white; border: 1px solid var(--border-color); border-radius: 10px; padding: 10px;">
+            <div style="font-size: 10px; font-weight: 700; color: var(--text-muted);">⚡ Leg Tightness Score</div>
+            <div id="insight-soreness-val" style="font-size: 15px; font-weight: 800; font-family: 'JetBrains Mono', monospace; color: var(--accent-amber); margin-top: 2px;">4 / 10</div>
+            <div style="font-size: 9px; color: var(--text-muted); font-weight: 700; margin-top: 2px;">Post-Match Strain</div>
+          </div>
+        </div>
       </div>
 
       <!-- Export Suite -->
@@ -572,7 +668,7 @@ nav.bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; background: rgba
     <span>Fatigue</span>
   </button>
   <button onclick="switchTab('trends')" id="nav-btn-trends" class="nav-item">
-    <!-- Line Chart / Trends SVG -->
+    <!-- Trends Line Chart SVG -->
     <svg viewBox="0 0 24 24">
       <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/>
       <polyline points="17 6 23 6 23 12"/>
@@ -639,7 +735,7 @@ nav.bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; background: rgba
    ======================================================== */
 var DAYS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
 var DAY_INDEX_MAP = { 'Mon': 0, 'Tue': 1, 'Wed': 2, 'Thu': 3, 'Fri': 4, 'Sat': 5, 'Sun': 6 };
-var STORAGE_VERSION = 'v1.0.9';
+var STORAGE_VERSION = 'v1.1.1';
 
 function getISOWeekNumber(d) {
   var date = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()));
@@ -853,6 +949,7 @@ function loadState() {
   if (!appState.customSets) appState.customSets = {};
   if (!Array.isArray(appState.weightLogs)) appState.weightLogs = [];
   if (!Array.isArray(appState.sentiments)) appState.sentiments = [];
+  if (!appState.hyroxBenchmarks) appState.hyroxBenchmarks = {};
 }
 
 function persistState() {
@@ -971,7 +1068,8 @@ function setProgramMode(mode, save) {
     if (hyroxView) hyroxView.classList.add('hidden');
   }
 
-  switchTab('workout');
+  // Refresh Trends telemetry visibility when program mode switches
+  renderTrendsDashboard();
 }
 
 /* ========================================================
@@ -1429,16 +1527,24 @@ function updateWeightHeader() {
 /* ========================================================
    TRENDS DASHBOARD & HIGH-DPI CANVAS CHART
    ======================================================== */
+function calculate1RM(weight, reps) {
+  var w = parseFloat(weight);
+  var r = parseFloat(reps);
+  if (isNaN(w) || isNaN(r) || w <= 0 || r <= 0) return 0;
+  if (r === 1) return w;
+  return Math.round(w * (1 + (r / 30)) * 10) / 10;
+}
+
 function renderTrendsDashboard() {
   var logs = appState.weightLogs || [];
   
-  // Update Overview Metric Tiles
+  // 1. Metric Overview Tiles
   var latestTile = document.getElementById('trend-tile-latest');
   var avgTile = document.getElementById('trend-tile-avg');
-  var countTile = document.getElementById('trend-tile-count');
+  var deltaTile = document.getElementById('trend-tile-delta');
+  var workoutsTile = document.getElementById('trend-tile-workouts');
 
-  if (latestTile) latestTile.innerText = `${(appState.currentWeight || 84.9).toFixed(1)} kg`;
-  if (countTile) countTile.innerText = logs.length;
+  if (latestTile) latestTile.innerText = `${(appState.currentWeight || 84.9).toFixed(1)}kg`;
 
   if (logs.length > 0) {
     var sum = 0;
@@ -1447,11 +1553,156 @@ function renderTrendsDashboard() {
     }
     var avg = (sum / logs.length).toFixed(1);
     if (avgTile) avgTile.innerText = `${avg} kg`;
+
+    if (logs.length >= 2) {
+      var delta = (parseFloat(logs[0].weight) - parseFloat(logs[logs.length - 1].weight)).toFixed(1);
+      if (deltaTile) {
+        deltaTile.innerText = `${delta > 0 ? '+' : ''}${delta}kg`;
+        deltaTile.style.color = delta <= 0 ? 'var(--accent-emerald)' : 'var(--accent-amber)';
+      }
+    } else {
+      if (deltaTile) deltaTile.innerText = '0.0kg';
+    }
   } else {
     if (avgTile) avgTile.innerText = '-- kg';
+    if (deltaTile) deltaTile.innerText = '--';
   }
 
-  // Render Check-in History List
+  // Workouts Completed Tally
+  var daysDone = 0;
+  for (var d = 0; d < DAYS.length; d++) {
+    if (isDayWorkoutComplete(DAYS[d])) daysDone++;
+  }
+  if (workoutsTile) workoutsTile.innerText = `${daysDone}/7`;
+
+  // 2. Recovery & Readiness Sub-Metrics
+  if (appState.fatigueData) {
+    var sleepEl = document.getElementById('insight-sleep-val');
+    var rhrEl = document.getElementById('insight-rhr-val');
+    var sorenessEl = document.getElementById('insight-soreness-val');
+
+    if (sleepEl) sleepEl.innerText = `${appState.fatigueData.sleepHrs || 7.5} hrs`;
+    if (rhrEl) rhrEl.innerText = `${appState.fatigueData.rhr || 52} bpm`;
+    if (sorenessEl) sorenessEl.innerText = `${appState.fatigueData.soreness || 4} / 10`;
+  }
+
+  // Calculate Average Daily Protein Logged
+  var totalProteinLogged = 0;
+  var daysCounted = 0;
+  for (var dayIdx = 0; dayIdx < DAYS.length; dayIdx++) {
+    var currentDay = DAYS[dayIdx];
+    var meals = MEAL_SCHEDULE[currentDay] || [];
+    var pLogged = 0;
+    for (var mIdx = 0; mIdx < meals.length; mIdx++) {
+      var mKey = `meal_${currentDay}_${mIdx}`;
+      if (appState.dailyTracking && appState.dailyTracking[mKey] && appState.dailyTracking[mKey].completed) {
+        pLogged += (meals[mIdx].protein || 0);
+      }
+    }
+    var shakes = (appState.dailyTracking && appState.dailyTracking[`shakes_${currentDay}`]) || 0;
+    pLogged += (shakes * 24);
+
+    if (pLogged > 0) {
+      totalProteinLogged += pLogged;
+      daysCounted++;
+    }
+  }
+  var proInsightEl = document.getElementById('insight-protein-val');
+  if (proInsightEl) {
+    proInsightEl.innerText = daysCounted > 0 ? `${Math.round(totalProteinLogged / daysCounted)} g` : '185 g';
+  }
+
+  // 3. Conditional Visibility: Hyrox Block vs. Standard Strength Profiler
+  var hyroxSection = document.getElementById('trend-hyrox-section');
+  var strengthSection = document.getElementById('trend-strength-section');
+
+  if (appState.mode === 'hyrox') {
+    if (hyroxSection) hyroxSection.classList.remove('hidden');
+    if (strengthSection) strengthSection.classList.add('hidden');
+    
+    // Update Hyrox Telemetry
+    if (appState.hyroxBenchmarks) {
+      var pEl = document.getElementById('trend-hyrox-pace');
+      var skEl = document.getElementById('trend-hyrox-skierg');
+      var slEl = document.getElementById('trend-hyrox-sled');
+
+      if (pEl && appState.hyroxBenchmarks.pace) pEl.innerText = appState.hyroxBenchmarks.pace;
+      if (skEl && appState.hyroxBenchmarks.skierg) skEl.innerText = appState.hyroxBenchmarks.skierg;
+      if (slEl && appState.hyroxBenchmarks.sled) slEl.innerText = appState.hyroxBenchmarks.sled;
+    }
+  } else {
+    if (hyroxSection) hyroxSection.classList.add('hidden');
+    if (strengthSection) strengthSection.classList.remove('hidden');
+
+    // Update 1RM Strength Profiler
+    var benchKey = 'Wed_w1_set_0';
+    var squatKey = 'Sun_su1_set_0';
+    var ohpKey = 'Wed_w3_set_0';
+    var rdlKey = 'Sun_su2_set_0';
+
+    var benchW = (appState.customSets && appState.customSets[benchKey] && appState.customSets[benchKey].weight) || '105';
+    var benchR = (appState.customSets && appState.customSets[benchKey] && appState.customSets[benchKey].reps) || '5';
+    var squatW = (appState.customSets && appState.customSets[squatKey] && appState.customSets[squatKey].weight) || '110';
+    var squatR = (appState.customSets && appState.customSets[squatKey] && appState.customSets[squatKey].reps) || '3';
+    var ohpW = (appState.customSets && appState.customSets[ohpKey] && appState.customSets[ohpKey].weight) || '62.5';
+    var ohpR = (appState.customSets && appState.customSets[ohpKey] && appState.customSets[ohpKey].reps) || '6';
+    var rdlW = (appState.customSets && appState.customSets[rdlKey] && appState.customSets[rdlKey].weight) || '120';
+    var rdlR = (appState.customSets && appState.customSets[rdlKey] && appState.customSets[rdlKey].reps) || '6';
+
+    var bEl = document.getElementById('1rm-bench-val');
+    var bSub = document.getElementById('1rm-bench-sub');
+    var sEl = document.getElementById('1rm-squat-val');
+    var sSub = document.getElementById('1rm-squat-sub');
+    var oEl = document.getElementById('1rm-ohp-val');
+    var oSub = document.getElementById('1rm-ohp-sub');
+    var rEl = document.getElementById('1rm-rdl-val');
+    var rSub = document.getElementById('1rm-rdl-sub');
+
+    if (bEl) bEl.innerText = `${calculate1RM(benchW, benchR)} kg`;
+    if (bSub) bSub.innerText = `Working: ${benchW}kg × ${benchR}`;
+    if (sEl) sEl.innerText = `${calculate1RM(squatW, squatR)} kg`;
+    if (sSub) sSub.innerText = `Working: ${squatW}kg × ${squatR}`;
+    if (oEl) oEl.innerText = `${calculate1RM(ohpW, ohpR)} kg`;
+    if (oSub) oSub.innerText = `Working: ${ohpW}kg × ${ohpR}`;
+    if (rEl) rEl.innerText = `${calculate1RM(rdlW, rdlR)} kg`;
+    if (rSub) rSub.innerText = `Working: ${rdlW}kg × ${rdlR}`;
+  }
+
+  // 4. Algorithmic Coach Advisory Message
+  var coachBadge = document.getElementById('trend-readiness-badge');
+  var coachMsg = document.getElementById('trend-readiness-msg');
+  var soreness = (appState.fatigueData && appState.fatigueData.soreness) || 4;
+  var sleep = (appState.fatigueData && appState.fatigueData.sleepHrs) || 7.5;
+
+  if (coachMsg && coachBadge) {
+    if (appState.mode === 'hyrox') {
+      if (soreness >= 7) {
+        coachBadge.innerText = 'High Leg Fatigue';
+        coachBadge.className = 'badge badge-red';
+        coachMsg.innerText = 'Compromised running volume is taxing the posterior chain. Shift focus to SkiErg pacing and active recovery swimming before your next sled session.';
+      } else {
+        coachBadge.innerText = 'Hyrox Primed';
+        coachBadge.className = 'badge badge-emerald';
+        coachMsg.innerText = 'Aerobic engine and threshold power are calibrated. Ready for compromised 1km intervals and sled push simulations.';
+      }
+    } else {
+      if (soreness >= 7) {
+        coachBadge.innerText = 'High Strain';
+        coachBadge.className = 'badge badge-red';
+        coachMsg.innerText = 'Perceived leg soreness is elevated. Prioritize Zone 2 engine flushing, hamstring mobility, and clean starch reloading.';
+      } else if (sleep < 7.0) {
+        coachBadge.innerText = 'Under-Recovered';
+        coachBadge.className = 'badge badge-purple';
+        coachMsg.innerText = 'Sleep duration fell below target (7.5h). Increase hydration and utilize the 432 Hz ambient meditation session to reset autonomic tone.';
+      } else {
+        coachBadge.innerText = 'Primed & Optimal';
+        coachBadge.className = 'badge badge-emerald';
+        coachMsg.innerText = 'Readiness markers and macro adherence are balanced. CNS capacity is primed for heavy progressive overloads and aesthetic splits.';
+      }
+    }
+  }
+
+  // 5. Render Check-in History List
   var listContainer = document.getElementById('trends-history-list');
   if (listContainer) {
     if (logs.length === 0) {
@@ -1714,21 +1965,24 @@ function saveFatigueData() {
 }
 
 /* ========================================================
-   PROCEDURAL RAIN SYNTHESIZER & BELL CHIMES
+   CALM AMBIENT MEDITATION MUSIC & BELL SYNTHESIZER
    ======================================================== */
 var medActive = false;
 var medDurationMinutes = 5;
 var medSecondsRemaining = 300;
 var medInterval = null;
-var rainAudioContext = null;
-var rainNoiseNode = null;
-var rainGainNode = null;
+var musicAudioContext = null;
+var musicOscillators = [];
+var musicMasterGain = null;
 
 function playMeditationChime(freq) {
   try {
     var AudioCtx = window.AudioContext || window.webkitAudioContext;
     if (!AudioCtx) return;
     var ctx = new AudioCtx();
+    if (ctx.state === 'suspended') {
+      ctx.resume();
+    }
     var osc = ctx.createOscillator();
     var gain = ctx.createGain();
 
@@ -1736,7 +1990,7 @@ function playMeditationChime(freq) {
     osc.frequency.setValueAtTime(freq || 432, ctx.currentTime);
 
     gain.gain.setValueAtTime(0, ctx.currentTime);
-    gain.gain.linearRampToValueAtTime(0.3, ctx.currentTime + 0.08);
+    gain.gain.linearRampToValueAtTime(0.28, ctx.currentTime + 0.08);
     gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + 3.2);
 
     osc.connect(gain);
@@ -1749,67 +2003,79 @@ function playMeditationChime(freq) {
   }
 }
 
-function startRainSound() {
+function startAmbientMeditationMusic() {
   try {
     var AudioCtx = window.AudioContext || window.webkitAudioContext;
     if (!AudioCtx) return;
-    rainAudioContext = new AudioCtx();
-
-    // Generate 3 seconds of continuous brown noise buffer (sounds like rain)
-    var bufferSize = rainAudioContext.sampleRate * 3;
-    var noiseBuffer = rainAudioContext.createBuffer(1, bufferSize, rainAudioContext.sampleRate);
-    var output = noiseBuffer.getChannelData(0);
-    var lastOut = 0.0;
-    for (var i = 0; i < bufferSize; i++) {
-      var white = Math.random() * 2 - 1;
-      output[i] = (lastOut + (0.02 * white)) / 1.02;
-      lastOut = output[i];
-      output[i] *= 3.2; // Warm amplitude boost
+    musicAudioContext = new AudioCtx();
+    if (musicAudioContext.state === 'suspended') {
+      musicAudioContext.resume();
     }
 
-    rainNoiseNode = rainAudioContext.createBufferSource();
-    rainNoiseNode.buffer = noiseBuffer;
-    rainNoiseNode.loop = true;
+    musicMasterGain = musicAudioContext.createGain();
+    musicMasterGain.gain.setValueAtTime(0, musicAudioContext.currentTime);
+    musicMasterGain.gain.linearRampToValueAtTime(0.18, musicAudioContext.currentTime + 2.5);
 
-    // Filter to simulate soft raindrops
-    var filter = rainAudioContext.createBiquadFilter();
+    var frequencies = [108.0, 162.0, 216.0, 270.0];
+    musicOscillators = [];
+
+    var filter = musicAudioContext.createBiquadFilter();
     filter.type = 'lowpass';
-    filter.frequency.setValueAtTime(750, rainAudioContext.currentTime);
+    filter.frequency.setValueAtTime(260, musicAudioContext.currentTime);
 
-    rainGainNode = rainAudioContext.createGain();
-    rainGainNode.gain.setValueAtTime(0, rainAudioContext.currentTime);
-    rainGainNode.gain.linearRampToValueAtTime(0.22, rainAudioContext.currentTime + 2.0); // Gentle fade-in
+    var lfo = musicAudioContext.createOscillator();
+    var lfoGain = musicAudioContext.createGain();
+    lfo.frequency.setValueAtTime(0.12, musicAudioContext.currentTime);
+    lfoGain.gain.setValueAtTime(140, musicAudioContext.currentTime);
 
-    rainNoiseNode.connect(filter);
-    filter.connect(rainGainNode);
-    rainGainNode.connect(rainAudioContext.destination);
+    lfo.connect(lfoGain);
+    lfoGain.connect(filter.frequency);
+    lfo.start();
+    musicOscillators.push(lfo);
 
-    rainNoiseNode.start();
-  } catch(e) {
-    console.log('Rain synthesis error:', e);
+    for (var i = 0; i < frequencies.length; i++) {
+      var osc = musicAudioContext.createOscillator();
+      var oscGain = musicAudioContext.createGain();
+
+      osc.type = (i % 2 === 0) ? 'sine' : 'triangle';
+      osc.frequency.setValueAtTime(frequencies[i], musicAudioContext.currentTime);
+
+      oscGain.gain.setValueAtTime(0.25, musicAudioContext.currentTime);
+
+      osc.connect(oscGain);
+      oscGain.connect(filter);
+      osc.start();
+      musicOscillators.push(osc);
+    }
+
+    filter.connect(musicMasterGain);
+    musicMasterGain.connect(musicAudioContext.destination);
+  } catch(err) {
+    console.log('Ambient music engine error:', err);
   }
 }
 
-function stopRainSound() {
-  if (rainGainNode && rainAudioContext) {
+function stopAmbientMeditationMusic() {
+  if (musicMasterGain && musicAudioContext) {
     try {
-      // Gentle fade-out
-      rainGainNode.gain.setValueAtTime(rainGainNode.gain.value, rainAudioContext.currentTime);
-      rainGainNode.gain.linearRampToValueAtTime(0.0001, rainAudioContext.currentTime + 1.5);
+      musicMasterGain.gain.setValueAtTime(musicMasterGain.gain.value, musicAudioContext.currentTime);
+      musicMasterGain.gain.linearRampToValueAtTime(0.0001, musicAudioContext.currentTime + 1.8);
       setTimeout(function() {
-        if (rainNoiseNode) {
-          rainNoiseNode.stop();
-          rainNoiseNode.disconnect();
+        for (var i = 0; i < musicOscillators.length; i++) {
+          try {
+            musicOscillators[i].stop();
+            musicOscillators[i].disconnect();
+          } catch(e){}
         }
-        if (rainAudioContext) {
-          rainAudioContext.close();
+        musicOscillators = [];
+        if (musicAudioContext) {
+          musicAudioContext.close();
         }
-        rainAudioContext = null;
-        rainNoiseNode = null;
-        rainGainNode = null;
-      }, 1600);
-    } catch(err) {
-      console.log('Stop rain error:', err);
+        musicAudioContext = null;
+        musicMasterGain = null;
+      }, 1900);
+    } catch(e) {
+      console.log('Stop ambient music error:', e);
     }
   }
 }
@@ -1854,7 +2120,7 @@ function startMeditationSession() {
 
   var btn = document.getElementById('btn-toggle-med');
   if (btn) {
-    btn.innerText = '⏹ End Rain Session';
+    btn.innerText = '⏹ End Ambient Session';
     btn.className = 'btn btn-danger';
   }
 
@@ -1865,10 +2131,10 @@ function startMeditationSession() {
   if (lbl) lbl.innerText = 'RESTING';
 
   var cap = document.getElementById('med-caption');
-  if (cap) cap.innerText = 'Gentle raindrops playing. Let your breathing settle into an effortless rhythm.';
+  if (cap) cap.innerText = 'Warm 432 Hz ambient music playing. Close your eyes and allow gravity to relax your muscles.';
 
-  playMeditationChime(432); // Opening harmonic bell
-  startRainSound();         // Start soothing rain
+  playMeditationChime(432);
+  startAmbientMeditationMusic();
 
   medInterval = setInterval(tickMeditationSession, 1000);
 }
@@ -1879,7 +2145,7 @@ function tickMeditationSession() {
   updateMedTimerDisplay();
 
   if (medSecondsRemaining <= 0) {
-    playMeditationChime(528); // Completion bell
+    playMeditationChime(528);
     stopMeditationSession();
   }
 }
@@ -1889,11 +2155,11 @@ function stopMeditationSession() {
   if (medInterval) clearInterval(medInterval);
   medInterval = null;
 
-  stopRainSound();
+  stopAmbientMeditationMusic();
 
   var btn = document.getElementById('btn-toggle-med');
   if (btn) {
-    btn.innerText = '▶ Begin Rain Session';
+    btn.innerText = '▶ Begin Ambient Session';
     btn.className = 'btn btn-emerald';
   }
 
@@ -1933,6 +2199,7 @@ function saveHyroxBenchmark(type) {
     appState.hyroxBenchmarks[type] = val;
     persistState();
     alert('Hyrox benchmark saved!');
+    renderTrendsDashboard();
   }
 }
 
