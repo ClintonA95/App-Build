@@ -320,7 +320,7 @@ nav.bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; background: rgba
         </button>
       </div>
 
-      <!-- Scoped Daily Quick Trackers -->
+      <!-- Scoped Daily Quick Trackers (Shakes target calibrated to 1) -->
       <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 16px;">
         <div class="counter-box">
           <div class="row" style="font-size: 11px; font-weight: 700; color: var(--text-muted); margin-bottom: 6px;">
@@ -337,9 +337,9 @@ nav.bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; background: rgba
         <div class="counter-box">
           <div class="row" style="font-size: 11px; font-weight: 700; color: var(--text-muted); margin-bottom: 6px;">
             <span>🥤 Shakes</span>
-            <span>Target: 2</span>
+            <span>Target: 1</span>
           </div>
-          <div id="shakes-display" style="font-size: 20px; font-weight: 800; color: var(--accent-amber); font-family: 'JetBrains Mono', monospace; margin-bottom: 8px;">0/2</div>
+          <div id="shakes-display" style="font-size: 20px; font-weight: 800; color: var(--accent-amber); font-family: 'JetBrains Mono', monospace; margin-bottom: 8px;">0/1</div>
           <div class="row" style="gap: 6px;">
             <button onclick="adjustShakes(-1)" class="btn btn-outline" style="flex: 1; padding: 6px 0;">-</button>
             <button onclick="adjustShakes(1)" class="btn" style="flex: 2; padding: 6px 0; font-size: 12px; background: var(--accent-amber);">+1 Shake</button>
@@ -467,7 +467,7 @@ nav.bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; background: rgba
     </div>
   </section>
 
-  <!-- TAB: TRENDS (FULL SUITE DASHBOARD & ANALYTICS) -->
+  <!-- TAB: TRENDS -->
   <section id="tab-trends" class="hidden">
     <div class="card">
       <div class="row" style="margin-bottom: 12px;">
@@ -521,7 +521,7 @@ nav.bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; background: rgba
         <canvas id="trends-chart-canvas" style="width: 100%; height: 160px; display: block;"></canvas>
       </div>
 
-      <!-- ESTIMATED 1RM STRENGTH PROFILER (ACTIVE IN BOTH STANDARD & HYROX MODES) -->
+      <!-- ESTIMATED 1RM STRENGTH PROFILER -->
       <div id="trend-strength-section" style="background: #F8FAFC; border: 1px solid var(--border-color); border-radius: 14px; padding: 14px; margin-bottom: 14px;">
         <div class="row" style="margin-bottom: 8px;">
           <h3 style="font-size: 12px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-muted);">Estimated 1RM Strength Profiler</h3>
@@ -654,7 +654,6 @@ nav.bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; background: rgba
     <span>Workout</span>
   </button>
   <button onclick="switchTab('nutrition')" id="nav-btn-nutrition" class="nav-item">
-    <!-- Real Knife and Fork SVG -->
     <svg viewBox="0 0 24 24">
       <path d="M5 2v5a2 2 0 0 0 2 2h0a2 2 0 0 0 2-2V2"/>
       <path d="M7 2v5"/>
@@ -668,7 +667,6 @@ nav.bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; background: rgba
     <span>Fatigue</span>
   </button>
   <button onclick="switchTab('trends')" id="nav-btn-trends" class="nav-item">
-    <!-- Trends Line Chart SVG -->
     <svg viewBox="0 0 24 24">
       <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/>
       <polyline points="17 6 23 6 23 12"/>
@@ -676,7 +674,6 @@ nav.bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; background: rgba
     <span>Trends</span>
   </button>
   <button onclick="switchTab('settings')" id="nav-btn-settings" class="nav-item">
-    <!-- Full Symmetrical Mechanical Gear SVG -->
     <svg viewBox="0 0 24 24">
       <path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/>
       <circle cx="12" cy="12" r="3"/>
@@ -862,47 +859,67 @@ var WORKOUT_SCHEDULE = {
   }
 };
 
-/* Meal Schedule: Calibrated to exact Lidl UK, Jordans Sourdough & Applied Nutrition products */
+/* ========================================================
+   CALIBRATED NUTRITION SCHEDULE (NEW PROTOCOL)
+   ======================================================== */
 var MEAL_SCHEDULE = {
   'Mon': [
-    { time: '11:30', name: '4 Eggs + 2x Sourdough', note: 'Lidl Large Eggs & Jordans Sourdough', cals: 528, protein: 39 },
-    { time: '15:00', name: 'Greek Yogurt (250g) & Almonds', note: 'Lidl Milbona 0% Yogurt & 1 Handful Almonds', cals: 295, protein: 30 },
-    { time: '19:00', name: 'Chicken Thighs (3) & Veg', note: '3x Lidl Skinless/Boneless Thighs & Greens', cals: 525, protein: 75 }
+    { time: '07:00', name: 'Pre-Run Hydration & Electrolytes', note: '500ml Water + Bulk Electrolytes (Fasted)', cals: 0, protein: 0 },
+    { time: '11:30', name: '4 Eggs, 2 Sausages & 3x Sourdough', note: 'Lidl Large Eggs, Chicken Sausages & Jordans Sourdough (+Honey) • Cook in 1 Cal Spray', cals: 760, protein: 56 },
+    { time: '14:30', name: 'ISO-XP Protein Shake', note: '1 Scoop Applied Nutrition ISO-XP & 250ml Unsweetened Almond Milk', cals: 130, protein: 25 },
+    { time: '16:30', name: 'Greek Yogurt (250g) & Almonds', note: 'Lidl Milbona 0% Greek Yogurt & 40g Whole Almonds (+Cinnamon)', cals: 380, protein: 34 },
+    { time: '19:30', name: '3x Chicken Thighs, Turkey Mince & Greens', note: 'Lidl Chicken Thighs, 125g Turkey Mince & Greens • Cook in 1 Cal Spray, finish with 1 tbsp Olive Oil', cals: 815, protein: 98 }
   ],
   'Tue': [
-    { time: '08:30', name: '5 Eggs & Chicken Sausages', note: '5x Lidl Large Eggs & 2x Chicken Sausages', cals: 530, protein: 56 },
-    { time: '13:30', name: 'Greek Yogurt (250g) & Almonds', note: 'Lidl Milbona 0% Yogurt & 1 Handful Almonds', cals: 295, protein: 30 },
-    { time: '19:00', name: 'Chicken Thighs (3) & Veg', note: '3x Lidl Skinless/Boneless Thighs & Greens', cals: 525, protein: 75 }
+    { time: '08:00', name: 'Morning Hydration & Electrolytes', note: '500ml Water + Bulk Electrolytes', cals: 0, protein: 0 },
+    { time: '08:30', name: '5 Eggs, 4 Sausages & ½ Avocado', note: 'Lidl Large Eggs, Chicken Sausages & ½ Medium Ripe Avocado • Cook in 1 Cal Spray', cals: 740, protein: 72 },
+    { time: '13:30', name: 'Greek Yogurt (250g) & Almonds', note: 'Lidl Milbona 0% Greek Yogurt & 40g Whole Almonds', cals: 380, protein: 34 },
+    { time: '14:30', name: 'Mid-Afternoon Electrolytes', note: '500ml Water + ½ tsp Sea Salt or Bulk Electrolytes', cals: 0, protein: 0 },
+    { time: '16:00', name: 'ISO-XP Protein Shake', note: '1 Scoop Applied Nutrition ISO-XP & 250ml Unsweetened Almond Milk', cals: 130, protein: 25 },
+    { time: '19:00', name: '3x Chicken Thighs, Turkey Mince & Greens', note: 'Lidl Chicken Thighs, 125g Turkey Mince & Greens • Cook in 1 Cal Spray, finish with 1 tbsp Olive Oil', cals: 815, protein: 98 }
   ],
   'Wed': [
-    { time: '08:00', name: 'Grapes', note: 'Pre-workout Fast Glycogen', cals: 54, protein: 1 },
-    { time: '10:30', name: '2x Sourdough & 5 Eggs', note: 'Jordans Sourdough & 5x Lidl Large Eggs', cals: 606, protein: 46 },
-    { time: '16:00', name: '50g Overnight Oats & 2 Handfuls Almonds', note: 'Lidl Oats, Applied Nutrition ISO-XP, Milbona 0% & Chia', cals: 784, protein: 70 },
-    { time: 'Post-Game', name: '3 Chicken Thighs & Veg + 60g (Dry) Rice', note: '3x Lidl Thighs, Lidl Basmati Rice & Greens', cals: 735, protein: 80 }
+    { time: '07:30', name: 'Pre-Lift Hydration & Electrolytes', note: '500ml Water + Bulk Electrolytes', cals: 0, protein: 0 },
+    { time: '08:00', name: 'Red Grapes & 1x Medjool Date', note: '100g Red Grapes & 1 Healthy Supplies Medjool Date', cals: 136, protein: 1 },
+    { time: '10:30', name: '3x Sourdough, 4 Eggs & 2 Sausages', note: 'Jordans Sourdough, Lidl Large Eggs, Chicken Sausages & 15g Honey • Cook in 1 Cal Spray', cals: 770, protein: 56 },
+    { time: '13:00', name: 'ISO-XP Protein Shake', note: '1 Scoop Applied Nutrition ISO-XP & 250ml Unsweetened Almond Milk', cals: 130, protein: 25 },
+    { time: '16:00', name: '85g Oats, Milbona 0% & Almonds', note: 'Lidl Rolled Oats, 150g Milbona 0%, 15g Chia Seeds & 25g Whole Almonds', cals: 625, protein: 33 },
+    { time: '17:45', name: 'Pre-Pitch Hydration & Electrolytes', note: '500ml Water + Bulk Electrolytes', cals: 0, protein: 0 },
+    { time: '18:15', name: 'Pitchside Primer (1x Date)', note: '1 Healthy Supplies Medjool Date (Taken 15 mins before kickoff)', cals: 66, protein: 0 },
+    { time: '20:45', name: '3x Chicken Thighs, Basmati Rice & Greens', note: 'Lidl Chicken Thighs, 95g (Dry) Basmati Rice & Greens • Cook in 1 Cal Spray (No Olive Oil)', cals: 830, protein: 76 }
   ],
   'Thu': [
-    { time: '07:45', name: 'Grapes', note: 'Pre-Workout Primer', cals: 54, protein: 1 },
-    { time: '09:00', name: '2x Sourdough & 4 Eggs', note: 'Jordans Sourdough & 4x Lidl Large Eggs', cals: 528, protein: 39 },
-    { time: '14:00', name: 'Greek Yogurt (250g) & Almonds', note: 'Lidl Milbona 0% Yogurt & 1 Handful Almonds', cals: 295, protein: 30 },
-    { time: '19:00', name: 'Chicken Thighs, Turkey Mince, Veg + 60g Rice', note: '2x Lidl Thighs, Lidl 2% Turkey Mince, Rice & Veg', cals: 661, protein: 78 }
+    { time: '07:15', name: 'Pre-Workout Hydration & Electrolytes', note: '500ml Water + Bulk Electrolytes', cals: 0, protein: 0 },
+    { time: '07:45', name: 'Red Grapes & 1x Medjool Date', note: '100g Red Grapes & 1 Healthy Supplies Medjool Date', cals: 136, protein: 1 },
+    { time: '09:00', name: '3x Sourdough, 4 Eggs & 2 Sausages', note: 'Jordans Sourdough, Lidl Large Eggs, Chicken Sausages & 15g Honey • Cook in 1 Cal Spray', cals: 770, protein: 56 },
+    { time: '13:00', name: 'ISO-XP Protein Shake', note: '1 Scoop Applied Nutrition ISO-XP & 250ml Unsweetened Almond Milk', cals: 130, protein: 25 },
+    { time: '14:30', name: '250g Milbona 0%, 45g Oats & Almonds', note: 'Lidl Milbona 0% Greek Yogurt, 45g Rolled Oats & 25g Whole Almonds', cals: 455, protein: 35 },
+    { time: '16:30', name: 'Mid-Afternoon Snack (1x Date)', note: '1 Healthy Supplies Medjool Date', cals: 66, protein: 0 },
+    { time: '19:00', name: '2x Thighs, Turkey Mince & Basmati Rice', note: '2x Lidl Thighs, 125g Turkey Mince, 85g (Dry) Rice & Greens • Cook in 1 Cal Spray (No Olive Oil)', cals: 800, protein: 78 }
   ],
   'Fri': [
-    { time: '08:30', name: '5 Eggs & Chicken Sausages', note: '5x Lidl Large Eggs & 2x Chicken Sausages', cals: 530, protein: 56 },
-    { time: '13:30', name: 'Greek Yogurt (250g) & Almonds', note: 'Lidl Milbona 0% Yogurt & 1 Handful Almonds', cals: 295, protein: 30 },
-    { time: '19:00', name: 'Chicken Thighs (3) & Veg', note: '3x Lidl Skinless/Boneless Thighs & Greens', cals: 525, protein: 75 }
+    { time: '08:00', name: 'Morning Hydration & Electrolytes', note: '500ml Water + Bulk Electrolytes', cals: 0, protein: 0 },
+    { time: '08:30', name: '5 Eggs, 4 Sausages & ½ Avocado', note: 'Lidl Large Eggs, Chicken Sausages & ½ Medium Ripe Avocado • Cook in 1 Cal Spray', cals: 740, protein: 72 },
+    { time: '13:30', name: 'Greek Yogurt (250g) & Almonds', note: 'Lidl Milbona 0% Greek Yogurt & 40g Whole Almonds', cals: 380, protein: 34 },
+    { time: '14:30', name: 'Mid-Afternoon Electrolytes', note: '500ml Water + ½ tsp Sea Salt or Bulk Electrolytes', cals: 0, protein: 0 },
+    { time: '16:00', name: 'ISO-XP Protein Shake', note: '1 Scoop Applied Nutrition ISO-XP & 250ml Unsweetened Almond Milk', cals: 130, protein: 25 },
+    { time: '19:00', name: '3x Chicken Thighs, Turkey Mince & Greens', note: 'Lidl Chicken Thighs, 125g Turkey Mince & Greens • Cook in 1 Cal Spray, finish with 1 tbsp Olive Oil', cals: 815, protein: 98 }
   ],
   'Sat': [
-    { time: '08:00', name: 'Grapes & 2x Sourdough', note: 'Pre-workout Primer (Jordans Sourdough)', cals: 270, protein: 9 },
-    { time: '11:00', name: '50g Overnight Oats & 2 Handfuls Almonds', note: 'Lidl Oats, Applied Nutrition ISO-XP, Milbona 0% & Chia', cals: 784, protein: 70 },
-    { time: '14:00', name: '4 Eggs & Turkey Mince', note: '4x Lidl Large Eggs & 150g Lidl 2% Turkey Mince', cals: 471, protein: 66 },
-    { time: '19:00', name: 'Chicken Thighs & Fries / Cheat Meal', note: 'Metabolic Reload Dinner', cals: 850, protein: 50 }
+    { time: '07:30', name: 'Pre-Run Hydration & Electrolytes', note: '500ml Water + Bulk Electrolytes', cals: 0, protein: 0 },
+    { time: '08:00', name: 'Grapes, 2x Sourdough & 1x Date', note: '100g Red Grapes, 2x Jordans Sourdough (+Honey) & 1 Healthy Supplies Date', cals: 336, protein: 8 },
+    { time: '11:00', name: '75g Oats, Milbona 0% & Chia (+ISO-XP)', note: 'Lidl Oats, 150g Milbona 0%, 1x Scoop ISO-XP, 15g Chia & 25g Almonds', cals: 650, protein: 52 },
+    { time: '14:30', name: '4 Eggs, Turkey Mince, 2x Sourdough & 1x Date', note: '4x Eggs, 100g Turkey Mince, 2x Sourdough & 1 Healthy Supplies Date • Cook in 1 Cal Spray', cals: 686, protein: 56 },
+    { time: '19:00', name: '3x Chicken Thighs, 200g Fries & Spicy Mayo', note: '3x Lidl Thighs, 200g Air-Fried Fries, 2 tbsp Hellmann\'s Spicy Mayo & Salad • Cook in 1 Cal Spray', cals: 875, protein: 70 }
   ],
   'Sun': [
-    { time: '08:00', name: 'Grapes', note: 'Pre-Squat Primer', cals: 54, protein: 1 },
-    { time: '10:30', name: '2x Sourdough & 4 Eggs, Chicken Sausages', note: 'Jordans Sourdough, 4x Eggs & Chicken Sausage', cals: 633, protein: 52 },
-    { time: '13:00', name: '50g Overnight Oats & 2 Handfuls Almonds', note: 'Lidl Oats, Applied Nutrition ISO-XP, Milbona 0% & Chia', cals: 784, protein: 70 },
-    { time: '16:00', name: 'Greek Yogurt (250g) & Almonds', note: 'Lidl Milbona 0% Yogurt & 1 Handful Almonds', cals: 295, protein: 30 },
-    { time: '19:00', name: '3 Chicken Thighs, 60g (Dry) Rice & Veg', note: '3x Lidl Thighs, Lidl Rice & Greens', cals: 735, protein: 80 }
+    { time: '07:15', name: 'Pre-Squat Hydration & Electrolytes', note: '500ml Water + Bulk Electrolytes', cals: 0, protein: 0 },
+    { time: '07:45', name: 'Red Grapes & 1x Medjool Date', note: '100g Red Grapes & 1 Healthy Supplies Medjool Date', cals: 136, protein: 1 },
+    { time: '09:00', name: '3x Sourdough, 4 Eggs & 2 Sausages', note: 'Jordans Sourdough, Lidl Large Eggs, Chicken Sausages & 15g Honey • Cook in 1 Cal Spray', cals: 770, protein: 56 },
+    { time: '13:00', name: 'ISO-XP Protein Shake', note: '1 Scoop Applied Nutrition ISO-XP & 250ml Unsweetened Almond Milk', cals: 130, protein: 25 },
+    { time: '14:30', name: '250g Milbona 0%, 45g Oats & Almonds', note: 'Lidl Milbona 0% Greek Yogurt, 45g Rolled Oats & 25g Whole Almonds', cals: 455, protein: 35 },
+    { time: '16:30', name: 'Mid-Afternoon Snack (1x Date)', note: '1 Healthy Supplies Medjool Date', cals: 66, protein: 0 },
+    { time: '19:00', name: '2x Thighs, Turkey Mince & Basmati Rice', note: '2x Lidl Thighs, 125g Turkey Mince, 85g (Dry) Rice & Greens • Cook in 1 Cal Spray (No Olive Oil)', cals: 800, protein: 78 }
   ]
 };
 
@@ -1072,7 +1089,7 @@ function setProgramMode(mode, save) {
 }
 
 /* ========================================================
-   TAB SWITCHING (5 Minimalist Tabs)
+   TAB SWITCHING
    ======================================================== */
 function switchTab(activeTabId) {
   var tabs = ['workout', 'nutrition', 'fatigue', 'trends', 'settings'];
@@ -1239,15 +1256,14 @@ function updateNutritionTally(day) {
     }
   }
 
-  // Protein Shakes (Applied Nutrition ISO-XP: 122 kcal, 24g pro)
+  // Protein Shakes (Applied Nutrition ISO-XP: 130 kcal, 25g pro)
   var shakesCount = (appState.dailyTracking && appState.dailyTracking[`shakes_${day}`]) || 0;
-  totalCals += (shakesCount * 122);
-  totalProtein += (shakesCount * 24);
+  totalCals += (shakesCount * 130);
+  totalProtein += (shakesCount * 25);
 
-  // Snacks: Dates (Lidl Deglet Nour: 28 kcal, 0.3g pro each)
+  // Snacks: Dates (Healthy Supplies Medjool: 66 kcal each)
   var datesCount = (appState.dailyTracking && appState.dailyTracking[`dates_${day}`]) || 0;
-  totalCals += (datesCount * 28);
-  totalProtein += Math.round(datesCount * 0.3);
+  totalCals += (datesCount * 66);
 
   // Custom & Off-Plan Foods
   var customFoods = (appState.dailyTracking && appState.dailyTracking[`custom_foods_${day}`]) || [];
@@ -1288,23 +1304,30 @@ function renderNutritionTab(day) {
   var waterDisp = document.getElementById('water-display');
   var shakesDisp = document.getElementById('shakes-display');
   if (waterDisp) waterDisp.innerText = `${currentWater.toFixed(1)}L`;
-  if (shakesDisp) shakesDisp.innerText = `${currentShakes}/2`;
+  if (shakesDisp) shakesDisp.innerText = `${currentShakes}/1`;
 
-  // Render Meals
+  // Render Meals with Dynamic % Macro Badges
   var meals = MEAL_SCHEDULE[day] || [];
   var mealContainer = document.getElementById('meal-list-container');
   if (mealContainer) {
+    var dayTotalCals = meals.reduce(function(acc, m) { return acc + (m.cals || 0); }, 0);
+    var dayTotalPro = meals.reduce(function(acc, m) { return acc + (m.protein || 0); }, 0);
+
     var mealHtml = '';
     for (var i = 0; i < meals.length; i++) {
       var m = meals[i];
       var mealKey = `meal_${day}_${i}`;
       var isChecked = (appState.dailyTracking && appState.dailyTracking[mealKey] && appState.dailyTracking[mealKey].completed) || false;
 
+      var calsPct = dayTotalCals > 0 ? Math.round(((m.cals || 0) / dayTotalCals) * 100) : 0;
+      var proPct = dayTotalPro > 0 ? Math.round(((m.protein || 0) / dayTotalPro) * 100) : 0;
+      var pctMeta = (m.cals > 0 || m.protein > 0) ? ` (${calsPct}% Daily Kcal • ${proPct}% Daily Pro)` : '';
+
       mealHtml += `<div class="meal-item ${isChecked ? 'checked' : ''}" onclick="toggleMealDone('${mealKey}')">`;
       mealHtml += '<div>';
       mealHtml += '<div class="row" style="gap: 6px; justify-content: flex-start; margin-bottom: 2px;">';
       mealHtml += `<span style="font-size: 11px; font-weight: 800; background: #EEF2F6; padding: 2px 6px; border-radius: 4px; color: var(--text-main);">${m.time}</span>`;
-      mealHtml += `<span style="font-size: 10px; font-weight: 700; color: var(--text-muted); font-family: 'JetBrains Mono', monospace;">${m.cals} kcal • ${m.protein}g pro</span>`;
+      mealHtml += `<span style="font-size: 10px; font-weight: 700; color: var(--text-muted); font-family: 'JetBrains Mono', monospace;">${m.cals} kcal • ${m.protein}g pro${pctMeta}</span>`;
       mealHtml += '</div>';
       mealHtml += `<div class="meal-desc" style="font-size: 13px; font-weight: 700; margin-top: 4px;">${m.name}</div>`;
       mealHtml += `<div style="font-size: 11px; color: var(--text-muted); margin-top: 2px;">${m.note}</div>`;
@@ -1325,17 +1348,16 @@ function renderSnacks(day) {
   if (!snackContainer) return;
 
   var currentDates = (appState.dailyTracking && appState.dailyTracking[`dates_${day}`]) || 0;
-  var datesCals = currentDates * 28;
-  var datesPro = (currentDates * 0.3).toFixed(1);
+  var datesCals = currentDates * 66;
 
   var html = '<div class="meal-item" style="cursor: default;">';
   html += '<div>';
   html += '<div class="row" style="gap: 6px; justify-content: flex-start; margin-bottom: 2px;">';
   html += '<span style="font-size: 11px; font-weight: 800; background: #FEF3C7; color: #92400E; padding: 2px 6px; border-radius: 4px;">SNACK</span>';
-  html += '<span style="font-size: 10px; font-weight: 700; color: var(--text-muted); font-family: \'JetBrains Mono\', monospace;">28 kcal • 0.3g pro each (Lidl)</span>';
+  html += '<span style="font-size: 10px; font-weight: 700; color: var(--text-muted); font-family: \'JetBrains Mono\', monospace;">66 kcal each (Healthy Supplies Medjool)</span>';
   html += '</div>';
-  html += '<div style="font-size: 13px; font-weight: 700; margin-top: 4px; color: var(--text-main);">🌴 Dates</div>';
-  html += `<div style="font-size: 12px; font-weight: 700; color: var(--accent-amber); font-family: 'JetBrains Mono', monospace; margin-top: 2px;">${currentDates} Logged (${datesCals} kcal • ${datesPro}g pro)</div>`;
+  html += '<div style="font-size: 13px; font-weight: 700; margin-top: 4px; color: var(--text-main);">🌴 Medjool Dates</div>';
+  html += `<div style="font-size: 12px; font-weight: 700; color: var(--accent-amber); font-family: 'JetBrains Mono', monospace; margin-top: 2px;">${currentDates} Logged (${datesCals} kcal)</div>`;
   html += '</div>';
   html += '<div style="display: flex; align-items: center; gap: 6px;">';
   html += '<button onclick="adjustDates(-1)" class="btn btn-outline" style="padding: 6px 10px; font-size: 12px; border-radius: 8px;">-</button>';
@@ -1450,7 +1472,7 @@ function toggleDayNutrition() {
 
   if (targetState) {
     appState.dailyTracking[`water_${activeDay}`] = 3.5;
-    appState.dailyTracking[`shakes_${activeDay}`] = 2;
+    appState.dailyTracking[`shakes_${activeDay}`] = 1;
   }
 
   persistState();
@@ -1476,7 +1498,7 @@ function adjustShakes(amount) {
   appState.dailyTracking[shakesKey] = current;
   persistState();
   var el = document.getElementById('shakes-display');
-  if (el) el.innerText = `${current}/2`;
+  if (el) el.innerText = `${current}/1`;
   updateNutritionTally(activeDay);
 }
 
@@ -1599,7 +1621,7 @@ function renderTrendsDashboard() {
       }
     }
     var shakes = (appState.dailyTracking && appState.dailyTracking[`shakes_${currentDay}`]) || 0;
-    pLogged += (shakes * 24);
+    pLogged += (shakes * 25);
 
     if (pLogged > 0) {
       totalProteinLogged += pLogged;
@@ -1611,7 +1633,7 @@ function renderTrendsDashboard() {
     proInsightEl.innerText = daysCounted > 0 ? `${Math.round(totalProteinLogged / daysCounted)} g` : '185 g';
   }
 
-  // 3. Estimated 1RM Strength Profiler (Active in BOTH Standard & Hyrox modes)
+  // 3. Estimated 1RM Strength Profiler
   var strengthSection = document.getElementById('trend-strength-section');
   if (strengthSection) {
     strengthSection.classList.remove('hidden');
@@ -1649,7 +1671,7 @@ function renderTrendsDashboard() {
     if (rSub) rSub.innerText = `Working: ${rdlW}kg × ${rdlR}`;
   }
 
-  // 4. Hyrox Station Telemetry (Visible ONLY in Hyrox Block mode)
+  // 4. Hyrox Station Telemetry
   var hyroxSection = document.getElementById('trend-hyrox-section');
   if (appState.mode === 'hyrox') {
     if (hyroxSection) {
@@ -1730,7 +1752,7 @@ function drawTrendsChart() {
   var canvas = document.getElementById('trends-chart-canvas');
   if (!canvas) return;
   var ctx = canvas.getContext('2d');
-  var logs = (appState.weightLogs || []).slice().reverse(); // Chronological
+  var logs = (appState.weightLogs || []).slice().reverse();
   
   var rect = canvas.getBoundingClientRect();
   var width = rect.width || 340;
