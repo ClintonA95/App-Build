@@ -130,6 +130,37 @@ input:focus, textarea:focus { border-color: var(--accent); background: #FFFFFF; 
 /* Quick Counters */
 .counter-box { background: #F8FAFC; border: 1px solid var(--border-color); border-radius: 14px; padding: 14px; text-align: center; }
 
+/* Meditation Orb */
+.med-orb-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 24px 0 16px;
+}
+.med-orb {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(16, 185, 129, 0.25) 0%, rgba(16, 185, 129, 0.05) 70%, transparent 100%);
+  border: 2px solid var(--accent-emerald);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  box-shadow: 0 0 24px rgba(16, 185, 129, 0.2);
+  transition: transform 4s ease-in-out;
+}
+.med-orb.pulsing {
+  animation: orbBreathe 8s infinite ease-in-out;
+}
+@keyframes orbBreathe {
+  0% { transform: scale(0.95); opacity: 0.8; }
+  50% { transform: scale(1.22); opacity: 1; }
+  100% { transform: scale(0.95); opacity: 0.8; }
+}
+
 /* Bottom Nav */
 nav.bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; background: rgba(255,255,255,0.98); backdrop-filter: blur(10px); border-top: 1px solid var(--border-color); z-index: 40; display: flex; justify-content: space-around; padding: 8px 12px; }
 .nav-item {
@@ -171,7 +202,7 @@ nav.bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; background: rgba
 /* Modals */
 .modal-overlay { position: fixed; inset: 0; background: rgba(15, 23, 42, 0.5); backdrop-filter: blur(4px); z-index: 60; display: flex; align-items: center; justify-content: center; padding: 16px; }
 .modal-overlay.hidden, .hidden { display: none !important; }
-.modal-box { background: white; border-radius: 20px; border: 1px solid var(--border-color); padding: 22px; width: 100%; max-width: 360px; box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1); }
+.modal-box { background: white; border-radius: 20px; border: 1px solid var(--border-color); padding: 20px; width: 100%; max-width: 440px; box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1); }
 </style>
 </head>
 <body>
@@ -323,6 +354,25 @@ nav.bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; background: rgba
       <h3 style="font-size: 12px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-muted); margin-top: 14px; margin-bottom: 8px;">Snacks</h3>
       <div id="snack-list-container"></div>
 
+      <!-- OFF-PLAN / CUSTOM FOODS -->
+      <div style="margin-top: 14px;">
+        <div class="row" style="margin-bottom: 8px;">
+          <h3 style="font-size: 12px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-muted);">Custom & Off-Plan Food</h3>
+          <span class="badge badge-gray">Free Text Input</span>
+        </div>
+        <div style="background: #F8FAFC; border: 1px solid var(--border-color); border-radius: 12px; padding: 12px; margin-bottom: 10px;">
+          <div style="margin-bottom: 8px;">
+            <input type="text" id="custom-food-name" placeholder="e.g. Protein bar, meal out, extra almonds" style="font-size: 12px;">
+          </div>
+          <div class="row" style="gap: 8px; margin-bottom: 8px;">
+            <input type="number" id="custom-food-cals" placeholder="Calories (e.g. 220)" style="font-size: 12px;">
+            <input type="number" id="custom-food-protein" placeholder="Protein g (e.g. 20)" style="font-size: 12px;">
+          </div>
+          <button onclick="addCustomFood()" class="btn" style="width: 100%; font-size: 12px; padding: 8px;">+ Add to Today's Intake</button>
+        </div>
+        <div id="custom-food-list-container"></div>
+      </div>
+
       <!-- Live Macro Tally Card -->
       <div style="margin-top: 16px; padding: 14px; background: #F8FAFC; border: 1px solid var(--border-color); border-radius: 14px;">
         <div class="row" style="margin-bottom: 8px;">
@@ -343,7 +393,7 @@ nav.bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; background: rgba
     </div>
   </section>
 
-  <!-- TAB: FATIGUE -->
+  <!-- TAB: FATIGUE & RECOVERY -->
   <section id="tab-fatigue" class="hidden">
     <div class="card">
       <div class="row" style="margin-bottom: 14px;">
@@ -372,9 +422,47 @@ nav.bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; background: rgba
         </div>
       </div>
 
-      <div style="border-top: 1px solid var(--border-color); padding-top: 14px;">
+      <div style="border-top: 1px solid var(--border-color); padding-top: 14px; margin-bottom: 16px;">
         <h3 style="font-size: 13px; font-weight: 800; margin-bottom: 8px;">Fatigue Sentiment Log</h3>
         <div id="sentiment-log-container" style="display: flex; flex-direction: column; gap: 8px;"></div>
+      </div>
+
+      <!-- GUIDED MINDFULNESS & MEDITATION (FEMALE VOICE) -->
+      <div style="border-top: 1px solid var(--border-color); padding-top: 16px;">
+        <div class="row" style="margin-bottom: 6px;">
+          <div>
+            <h3 style="font-size: 14px; font-weight: 800;">Guided Meditation</h3>
+            <p style="font-size: 11px; color: var(--text-muted);">Calm voice guidance & nervous system recovery</p>
+          </div>
+          <span class="badge badge-emerald" id="med-voice-badge">Female Voice</span>
+        </div>
+
+        <div style="background: #F8FAFC; border: 1px solid var(--border-color); border-radius: 14px; padding: 16px; text-align: center; margin-top: 10px;">
+          <div class="row" style="justify-content: center; gap: 8px; margin-bottom: 12px;">
+            <button id="med-dur-5" class="btn" style="font-size: 11px; padding: 6px 12px;" onclick="setMeditationDuration(5)">5-Min Session</button>
+            <button id="med-dur-8" class="btn btn-outline" style="font-size: 11px; padding: 6px 12px;" onclick="setMeditationDuration(8)">8-Min Session</button>
+          </div>
+
+          <div class="med-orb-wrapper">
+            <div id="med-orb" class="med-orb">
+              <div id="med-status-label" style="font-size: 11px; font-weight: 800; letter-spacing: 0.5px; color: var(--text-main);">MEDITATE</div>
+              <div id="med-timer-display" style="font-size: 20px; font-weight: 800; font-family: 'JetBrains Mono', monospace; color: var(--accent-emerald); margin-top: 2px;">05:00</div>
+            </div>
+          </div>
+
+          <p id="med-caption" style="font-size: 11px; color: var(--text-muted); margin-bottom: 14px; min-height: 28px; line-height: 1.4;">
+            Close your eyes, settle into your posture, and let the voice guide your breath.
+          </p>
+
+          <div class="row" style="justify-content: center; gap: 10px;">
+            <button id="btn-toggle-med" onclick="toggleMeditationSession()" class="btn btn-emerald" style="min-width: 140px; font-size: 12px;">
+              ▶ Begin Guided Session
+            </button>
+            <button onclick="playMeditationChime(432)" class="btn btn-outline" style="font-size: 12px; padding: 8px 12px;" title="Test Harmonic Chime">
+              🔔 Test Bell
+            </button>
+          </div>
+        </div>
       </div>
     </div>
   </section>
@@ -438,25 +526,42 @@ nav.bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; background: rgba
   </button>
 </nav>
 
-<!-- MODAL: WEIGHT CHECK-IN -->
+<!-- MODAL: WEIGHT CHECK-IN & TRENDS GRAPH -->
 <div id="modal-weight" class="modal-overlay hidden">
   <div class="modal-box">
-    <div class="row" style="margin-bottom: 14px;">
-      <h3 style="font-size: 16px; font-weight: 800;">Log Weight Check-in</h3>
+    <div class="row" style="margin-bottom: 12px;">
+      <h3 style="font-size: 16px; font-weight: 800;">Weight Check-in & Trends</h3>
       <button onclick="closeWeightModal()" style="background: none; border: none; font-size: 18px; cursor: pointer; color: var(--text-muted);">✕</button>
     </div>
-    <div style="margin-bottom: 12px;">
-      <label style="font-size: 12px; font-weight: 700; color: var(--text-main); display: block; margin-bottom: 6px;">Bodyweight (kg)</label>
-      <input type="number" id="input-weight-val" step="0.1" value="84.9" style="font-size: 16px; font-weight: 700;">
+
+    <!-- Quick Log Inputs -->
+    <div style="display: grid; grid-template-columns: 1fr 1.5fr; gap: 8px; margin-bottom: 10px;">
+      <div>
+        <label style="font-size: 11px; font-weight: 700; color: var(--text-muted); display: block; margin-bottom: 4px;">Weight (kg)</label>
+        <input type="number" id="input-weight-val" step="0.1" value="84.9" style="font-size: 14px; font-weight: 700;">
+      </div>
+      <div>
+        <label style="font-size: 11px; font-weight: 700; color: var(--text-muted); display: block; margin-bottom: 4px;">Condition Note</label>
+        <input type="text" id="input-weight-notes" placeholder="e.g. Morning fast" style="font-size: 12px;">
+      </div>
     </div>
-    <div style="margin-bottom: 18px;">
-      <label style="font-size: 12px; font-weight: 700; color: var(--text-main); display: block; margin-bottom: 6px;">Notes / Conditions</label>
-      <input type="text" id="input-weight-notes" placeholder="e.g., Morning fast, post-hydrate">
+    
+    <div class="row" style="gap: 8px; margin-bottom: 14px;">
+      <button onclick="saveWeightLog()" class="btn" style="flex: 1; font-size: 12px; padding: 8px;">Save Check-in</button>
+      <button onclick="exportWeightCSV()" class="btn btn-outline" style="font-size: 12px; padding: 8px;">📊 Export CSV</button>
     </div>
-    <div class="row" style="gap: 10px;">
-      <button onclick="closeWeightModal()" class="btn btn-outline" style="flex: 1;">Cancel</button>
-      <button onclick="saveWeightLog()" class="btn" style="flex: 1;">Save Log</button>
+
+    <!-- Trend Graph Canvas -->
+    <div style="background: #F8FAFC; border: 1px solid var(--border-color); border-radius: 12px; padding: 10px; margin-bottom: 10px;">
+      <div class="row" style="margin-bottom: 6px;">
+        <span style="font-size: 11px; font-weight: 800; color: var(--text-muted); text-transform: uppercase;">Bodyweight Trend Curve</span>
+        <span class="badge badge-blue" id="weight-trend-stat">-- kg avg</span>
+      </div>
+      <canvas id="weight-chart-canvas" style="width: 100%; height: 130px; display: block;"></canvas>
     </div>
+
+    <!-- Recent Logs List -->
+    <div style="max-height: 100px; overflow-y: auto; border: 1px solid var(--border-color); border-radius: 10px; padding: 6px 10px; background: white;" id="weight-history-list"></div>
   </div>
 </div>
 
@@ -484,7 +589,7 @@ nav.bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; background: rgba
    ======================================================== */
 var DAYS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
 var DAY_INDEX_MAP = { 'Mon': 0, 'Tue': 1, 'Wed': 2, 'Thu': 3, 'Fri': 4, 'Sat': 5, 'Sun': 6 };
-var STORAGE_VERSION = 'v1.0.5';
+var STORAGE_VERSION = 'v1.0.6';
 
 function getISOWeekNumber(d) {
   var date = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()));
@@ -680,11 +785,11 @@ function loadState() {
         if (parsed.version === STORAGE_VERSION) {
           appState = Object.assign({}, appState, parsed);
         } else {
-          // Self-heal preserving custom weights and benchmarks
           if (parsed.customSets) appState.customSets = parsed.customSets;
           if (parsed.hyroxBenchmarks) appState.hyroxBenchmarks = parsed.hyroxBenchmarks;
           if (parsed.currentWeight) appState.currentWeight = parsed.currentWeight;
           if (parsed.weightLogs) appState.weightLogs = parsed.weightLogs;
+          if (parsed.dailyTracking) appState.dailyTracking = parsed.dailyTracking;
         }
       }
     }
@@ -723,6 +828,13 @@ function init() {
   renderSentimentLog();
   loadFatigueInputs();
   setProgramMode(appState.mode || 'standard', false);
+
+  if ('speechSynthesis' in window) {
+    window.speechSynthesis.onvoiceschanged = function() {
+      detectFemaleVoice();
+    };
+    detectFemaleVoice();
+  }
 }
 
 function renderDaySelector() {
@@ -956,7 +1068,7 @@ function toggleDayWorkout() {
 }
 
 /* ========================================================
-   NUTRITION ENGINE, SNACKS (DATES) & LIVE MACRO TALLY
+   NUTRITION ENGINE, SNACKS & OFF-PLAN FOOD
    ======================================================== */
 function isDayNutritionComplete(day) {
   var meals = MEAL_SCHEDULE[day] || [];
@@ -981,7 +1093,7 @@ function updateNutritionTally(day) {
     }
   }
 
-  // Protein Shakes (Applied Nutrition ISO-XP + Vemondo unsweetened almond milk: 122 kcal, 24g pro)
+  // Protein Shakes (Applied Nutrition ISO-XP: 122 kcal, 24g pro)
   var shakesCount = (appState.dailyTracking && appState.dailyTracking['shakes_' + day]) || 0;
   totalCals += (shakesCount * 122);
   totalProtein += (shakesCount * 24);
@@ -990,6 +1102,13 @@ function updateNutritionTally(day) {
   var datesCount = (appState.dailyTracking && appState.dailyTracking['dates_' + day]) || 0;
   totalCals += (datesCount * 28);
   totalProtein += Math.round(datesCount * 0.3);
+
+  // Custom & Off-Plan Foods
+  var customFoods = (appState.dailyTracking && appState.dailyTracking['custom_foods_' + day]) || [];
+  for (var c = 0; c < customFoods.length; c++) {
+    totalCals += (customFoods[c].cals || 0);
+    totalProtein += (customFoods[c].protein || 0);
+  }
 
   var calsEl = document.getElementById('tally-cals');
   var proEl = document.getElementById('tally-protein');
@@ -1044,8 +1163,9 @@ function renderNutritionTab(day) {
     mealContainer.innerHTML = mealHtml;
   }
 
-  // Render Snacks (Dates with +1 Stepper)
+  // Render Snacks & Off-Plan Foods
   renderSnacks(day);
+  renderCustomFoods(day);
 
   // Update Macro Tally
   updateNutritionTally(day);
@@ -1086,6 +1206,76 @@ function adjustDates(amount) {
   persistState();
   renderSnacks(activeDay);
   updateNutritionTally(activeDay);
+}
+
+function addCustomFood() {
+  var nameEl = document.getElementById('custom-food-name');
+  var calsEl = document.getElementById('custom-food-cals');
+  var proEl = document.getElementById('custom-food-protein');
+
+  var name = nameEl ? nameEl.value.trim() : '';
+  var cals = parseInt(calsEl ? calsEl.value : 0) || 0;
+  var pro = parseInt(proEl ? proEl.value : 0) || 0;
+
+  if (!name) {
+    alert('Please enter a description for this item.');
+    return;
+  }
+
+  var key = 'custom_foods_' + activeDay;
+  if (!appState.dailyTracking) appState.dailyTracking = {};
+  if (!Array.isArray(appState.dailyTracking[key])) appState.dailyTracking[key] = [];
+
+  appState.dailyTracking[key].push({
+    id: 'cf_' + Date.now(),
+    name: name,
+    cals: cals,
+    protein: pro
+  });
+
+  if (nameEl) nameEl.value = '';
+  if (calsEl) calsEl.value = '';
+  if (proEl) proEl.value = '';
+
+  persistState();
+  renderCustomFoods(activeDay);
+  updateNutritionTally(activeDay);
+}
+
+function removeCustomFood(index) {
+  var key = 'custom_foods_' + activeDay;
+  if (appState.dailyTracking && Array.isArray(appState.dailyTracking[key])) {
+    appState.dailyTracking[key].splice(index, 1);
+    persistState();
+    renderCustomFoods(activeDay);
+    updateNutritionTally(activeDay);
+  }
+}
+
+function renderCustomFoods(day) {
+  var container = document.getElementById('custom-food-list-container');
+  if (!container) return;
+
+  var key = 'custom_foods_' + day;
+  var items = (appState.dailyTracking && appState.dailyTracking[key]) || [];
+
+  if (items.length === 0) {
+    container.innerHTML = '<p style="font-size: 11px; color: var(--text-muted); padding: 4px 0;">No off-plan items logged today.</p>';
+    return;
+  }
+
+  var html = '';
+  for (var i = 0; i < items.length; i++) {
+    var it = items[i];
+    html += '<div class="meal-item" style="padding: 9px 12px; margin-bottom: 6px; cursor: default;">';
+    html += '<div>';
+    html += '<div style="font-size: 12px; font-weight: 700; color: var(--text-main);">' + it.name + '</div>';
+    html += '<div style="font-size: 11px; font-weight: 600; color: var(--text-muted); font-family: \'JetBrains Mono\', monospace;">' + it.cals + ' kcal • ' + it.protein + 'g protein</div>';
+    html += '</div>';
+    html += '<button onclick="removeCustomFood(' + i + ')" style="background: none; border: none; color: #EF4444; font-size: 15px; font-weight: 800; cursor: pointer; padding: 4px 8px;">✕</button>';
+    html += '</div>';
+  }
+  container.innerHTML = html;
 }
 
 function toggleMealDone(mealKey) {
@@ -1142,7 +1332,7 @@ function adjustShakes(amount) {
 }
 
 /* ========================================================
-   WEIGHT CHECK-IN MODAL
+   WEIGHT CHECK-IN, CANVAS GRAPH & CSV EXPORT
    ======================================================== */
 function openWeightModal() {
   var valEl = document.getElementById('input-weight-val');
@@ -1151,6 +1341,9 @@ function openWeightModal() {
   if (valEl) valEl.value = appState.currentWeight || 84.9;
   if (noteEl) noteEl.value = '';
   if (modal) modal.classList.remove('hidden');
+
+  renderWeightHistoryList();
+  setTimeout(drawWeightChart, 60);
 }
 
 function closeWeightModal() {
@@ -1168,19 +1361,175 @@ function saveWeightLog() {
     appState.currentWeight = val;
     if (!appState.weightLogs) appState.weightLogs = [];
     appState.weightLogs.unshift({
-      date: new Date().toLocaleDateString(),
+      date: new Date().toLocaleDateString([], { month: 'short', day: 'numeric', year: 'numeric' }),
       weight: val,
       notes: notes || 'Standard check-in'
     });
     persistState();
     updateWeightHeader();
+    renderWeightHistoryList();
+    drawWeightChart();
   }
-  closeWeightModal();
 }
 
 function updateWeightHeader() {
   var el = document.getElementById('header-weight-text');
   if (el) el.innerText = (appState.currentWeight || 84.9).toFixed(1) + ' kg';
+}
+
+function exportWeightCSV() {
+  var logs = appState.weightLogs || [];
+  if (logs.length === 0) {
+    alert('No weight logs recorded yet.');
+    return;
+  }
+
+  var csvContent = 'Date,Weight (kg),Notes\n';
+  for (var i = 0; i < logs.length; i++) {
+    var l = logs[i];
+    var escapedNote = '"' + (l.notes || '').replace(/"/g, '""') + '"';
+    csvContent += l.date + ',' + l.weight + ',' + escapedNote + '\n';
+  }
+
+  var blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+  var url = URL.createObjectURL(blob);
+  var link = document.createElement('a');
+  link.setAttribute('href', url);
+  link.setAttribute('download', 'aesthetic_apex_weight_history.csv');
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+}
+
+function renderWeightHistoryList() {
+  var container = document.getElementById('weight-history-list');
+  var statBadge = document.getElementById('weight-trend-stat');
+  if (!container) return;
+
+  var logs = appState.weightLogs || [];
+  if (logs.length === 0) {
+    container.innerHTML = '<p style="font-size: 11px; color: var(--text-muted); text-align: center; padding: 6px;">No check-ins logged yet.</p>';
+    if (statBadge) statBadge.innerText = '-- kg avg';
+    return;
+  }
+
+  var sum = 0;
+  for (var i = 0; i < logs.length; i++) {
+    sum += parseFloat(logs[i].weight) || 0;
+  }
+  var avg = (sum / logs.length).toFixed(1);
+  if (statBadge) statBadge.innerText = avg + ' kg avg (' + logs.length + ' logs)';
+
+  var html = '';
+  for (var i = 0; i < logs.length; i++) {
+    var l = logs[i];
+    html += '<div class="row" style="padding: 5px 0; border-bottom: 1px solid #F1F5F9; font-size: 11px;">';
+    html += '<div>';
+    html += '<strong style="color: var(--text-main); font-family: \'JetBrains Mono\', monospace;">' + parseFloat(l.weight).toFixed(1) + ' kg</strong> ';
+    html += '<span style="color: var(--text-muted); font-size: 10px;">(' + (l.notes || 'Check-in') + ')</span>';
+    html += '</div>';
+    html += '<span style="color: var(--text-muted); font-size: 10px; font-weight: 600;">' + l.date + '</span>';
+    html += '</div>';
+  }
+  container.innerHTML = html;
+}
+
+function drawWeightChart() {
+  var canvas = document.getElementById('weight-chart-canvas');
+  if (!canvas) return;
+  var ctx = canvas.getContext('2d');
+  var logs = (appState.weightLogs || []).slice().reverse(); // Chronological
+  
+  var rect = canvas.getBoundingClientRect();
+  var width = rect.width || 340;
+  var height = 130;
+  canvas.width = width * (window.devicePixelRatio || 1);
+  canvas.height = height * (window.devicePixelRatio || 1);
+  ctx.scale(window.devicePixelRatio || 1, window.devicePixelRatio || 1);
+
+  ctx.clearRect(0, 0, width, height);
+
+  if (logs.length < 2) {
+    ctx.fillStyle = '#64748B';
+    ctx.font = '600 11px "Plus Jakarta Sans", sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillText('Log at least 2 check-ins to render trend curve.', width / 2, height / 2);
+    return;
+  }
+
+  var weights = logs.map(function(l) { return parseFloat(l.weight); });
+  var minW = Math.min.apply(null, weights) - 0.5;
+  var maxW = Math.max.apply(null, weights) + 0.5;
+  if (maxW === minW) { maxW += 1; minW -= 1; }
+
+  var paddingLeft = 36;
+  var paddingRight = 14;
+  var paddingTop = 14;
+  var paddingBottom = 20;
+  var chartW = width - paddingLeft - paddingRight;
+  var chartH = height - paddingTop - paddingBottom;
+
+  // Gridlines
+  ctx.strokeStyle = '#E2E8F0';
+  ctx.lineWidth = 1;
+  ctx.beginPath();
+  for (var g = 0; g <= 3; g++) {
+    var gy = paddingTop + (chartH / 3) * g;
+    ctx.moveTo(paddingLeft, gy);
+    ctx.lineTo(width - paddingRight, gy);
+    var gVal = (maxW - ((maxW - minW) / 3) * g).toFixed(1);
+    ctx.fillStyle = '#94A3B8';
+    ctx.font = '500 10px "JetBrains Mono", monospace';
+    ctx.textAlign = 'right';
+    ctx.fillText(gVal, paddingLeft - 6, gy + 3);
+  }
+  ctx.stroke();
+
+  // Points mapping
+  var points = [];
+  var stepX = chartW / (logs.length - 1);
+  for (var i = 0; i < logs.length; i++) {
+    var px = paddingLeft + i * stepX;
+    var normY = (logs[i].weight - minW) / (maxW - minW);
+    var py = paddingTop + chartH - (normY * chartH);
+    points.push({ x: px, y: py });
+  }
+
+  // Gradient fill area
+  var grad = ctx.createLinearGradient(0, paddingTop, 0, height - paddingBottom);
+  grad.addColorStop(0, 'rgba(37, 99, 235, 0.22)');
+  grad.addColorStop(1, 'rgba(37, 99, 235, 0.0)');
+  ctx.fillStyle = grad;
+  ctx.beginPath();
+  ctx.moveTo(points[0].x, points[0].y);
+  for (var i = 1; i < points.length; i++) {
+    ctx.lineTo(points[i].x, points[i].y);
+  }
+  ctx.lineTo(points[points.length - 1].x, height - paddingBottom);
+  ctx.lineTo(points[0].x, height - paddingBottom);
+  ctx.closePath();
+  ctx.fill();
+
+  // Stroke line
+  ctx.strokeStyle = '#2563EB';
+  ctx.lineWidth = 2.5;
+  ctx.beginPath();
+  ctx.moveTo(points[0].x, points[0].y);
+  for (var i = 1; i < points.length; i++) {
+    ctx.lineTo(points[i].x, points[i].y);
+  }
+  ctx.stroke();
+
+  // Draw node points
+  for (var i = 0; i < points.length; i++) {
+    ctx.fillStyle = '#FFFFFF';
+    ctx.strokeStyle = '#2563EB';
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.arc(points[i].x, points[i].y, 3.5, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.stroke();
+  }
 }
 
 /* ========================================================
@@ -1261,6 +1610,201 @@ function saveFatigueData() {
     soreness: soEl ? parseInt(soEl.value) || 4 : 4
   };
   persistState();
+}
+
+/* ========================================================
+   GUIDED MEDITATION ENGINE (FEMALE VOICE & CHIMES)
+   ======================================================== */
+var medActive = false;
+var medDurationMinutes = 5;
+var medSecondsRemaining = 300;
+var medInterval = null;
+var medFemaleVoice = null;
+
+function detectFemaleVoice() {
+  if (!('speechSynthesis' in window)) return null;
+  var voices = window.speechSynthesis.getVoices();
+  var female = voices.find(function(v) {
+    var n = v.name.toLowerCase();
+    return (n.indexOf('female') !== -1 || n.indexOf('samantha') !== -1 || n.indexOf('victoria') !== -1 ||
+            n.indexOf('karen') !== -1 || n.indexOf('zira') !== -1 || n.indexOf('serena') !== -1 ||
+            n.indexOf('moira') !== -1 || n.indexOf('hazel') !== -1);
+  });
+
+  if (!female) {
+    female = voices.find(function(v) { return v.lang.indexOf('en') === 0; }) || voices[0];
+  }
+  medFemaleVoice = female;
+  var badge = document.getElementById('med-voice-badge');
+  if (badge && female) {
+    badge.innerText = 'Voice: ' + (female.name.split(' ')[0] || 'Calm');
+  }
+  return female;
+}
+
+function playMeditationChime(freq) {
+  try {
+    var AudioCtx = window.AudioContext || window.webkitAudioContext;
+    if (!AudioCtx) return;
+    var ctx = new AudioCtx();
+    var osc = ctx.createOscillator();
+    var gain = ctx.createGain();
+
+    osc.type = 'sine';
+    osc.frequency.setValueAtTime(freq || 432, ctx.currentTime);
+
+    gain.gain.setValueAtTime(0, ctx.currentTime);
+    gain.gain.linearRampToValueAtTime(0.28, ctx.currentTime + 0.08);
+    gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + 3.2);
+
+    osc.connect(gain);
+    gain.connect(ctx.destination);
+
+    osc.start();
+    osc.stop(ctx.currentTime + 3.3);
+  } catch(e) {
+    console.log('Audio chime info:', e);
+  }
+}
+
+function speakMeditationCue(text) {
+  if (!('speechSynthesis' in window)) return;
+  window.speechSynthesis.cancel();
+
+  var utterance = new SpeechSynthesisUtterance(text);
+  if (!medFemaleVoice) detectFemaleVoice();
+  if (medFemaleVoice) utterance.voice = medFemaleVoice;
+
+  utterance.rate = 0.85; // Slow, relaxed pace
+  utterance.pitch = 0.98;
+  window.speechSynthesis.speak(utterance);
+
+  var capEl = document.getElementById('med-caption');
+  if (capEl) capEl.innerText = text;
+}
+
+function setMeditationDuration(mins) {
+  if (medActive) stopMeditationSession();
+  medDurationMinutes = mins;
+  medSecondsRemaining = mins * 60;
+
+  var b5 = document.getElementById('med-dur-5');
+  var b8 = document.getElementById('med-dur-8');
+  if (mins === 5) {
+    if (b5) b5.className = 'btn';
+    if (b8) b8.className = 'btn btn-outline';
+  } else {
+    if (b5) b5.className = 'btn btn-outline';
+    if (b8) b8.className = 'btn';
+  }
+  updateMedTimerDisplay();
+}
+
+function updateMedTimerDisplay() {
+  var mins = Math.floor(medSecondsRemaining / 60);
+  var secs = medSecondsRemaining % 60;
+  var text = (mins < 10 ? '0' : '') + mins + ':' + (secs < 10 ? '0' : '') + secs;
+  var el = document.getElementById('med-timer-display');
+  if (el) el.innerText = text;
+}
+
+// Structured Scripted Guidance
+var MED_CUES_5 = [
+  { atSec: 298, chime: 432, text: "Welcome to your recovery session. Allow your eyes to gently close, and let your shoulders drop away from your ears." },
+  { atSec: 275, chime: 0, text: "Take a slow, deep breath in through your nose... and a long, gentle exhale out through your mouth." },
+  { atSec: 235, chime: 528, text: "Feel the weight of your body supported by the surface beneath you. Release any tension held in your jaw, your forehead, and your hands." },
+  { atSec: 180, chime: 0, text: "Let your breathing return to its natural rhythm. Simply observe the cool air entering on the inhale, and warm air leaving on the exhale." },
+  { atSec: 120, chime: 432, text: "If your mind wanders, gently acknowledge the thought without judgment, and return your awareness softly back to your breath." },
+  { atSec: 50, chime: 0, text: "Feel the calm stillness throughout your muscles. You have rested your nervous system, refueled, and restored your energy." },
+  { atSec: 8, chime: 432, text: "As the bell sounds, begin to wiggle your fingers and toes, and slowly open your eyes when you feel ready." }
+];
+
+var MED_CUES_8 = [
+  { atSec: 478, chime: 432, text: "Welcome to your recovery session. Close your eyes, settle into your seat, and let your body come to complete stillness." },
+  { atSec: 440, chime: 0, text: "Draw in a deep, nourishing breath filling your belly... and let it go with a soft, slow sigh." },
+  { atSec: 390, chime: 528, text: "Scan downward from the crown of your head. Relax your brow, soften the muscles around your eyes, and loosen your neck." },
+  { atSec: 320, chime: 0, text: "Notice your shoulders, arms, and legs. Allow gravity to do all the work, sinking deeper into relaxation." },
+  { atSec: 250, chime: 432, text: "Anchor your attention directly at the center of your chest or the gentle rise and fall of your stomach." },
+  { atSec: 180, chime: 0, text: "There is nothing you need to accomplish right now. Simply be here in this quiet moment of pure restoration." },
+  { atSec: 90, chime: 528, text: "Notice the sensation of peace and clarity flowing through your body, resetting your nervous system." },
+  { atSec: 10, chime: 432, text: "As the chime rings, bring gentle awareness back to the room. Open your eyes when you are ready, fully centered and refreshed." }
+];
+
+function toggleMeditationSession() {
+  if (medActive) {
+    stopMeditationSession();
+  } else {
+    startMeditationSession();
+  }
+}
+
+function startMeditationSession() {
+  medActive = true;
+  medSecondsRemaining = medDurationMinutes * 60;
+  updateMedTimerDisplay();
+
+  var btn = document.getElementById('btn-toggle-med');
+  if (btn) {
+    btn.innerText = '⏹ End Session';
+    btn.className = 'btn btn-danger';
+  }
+
+  var orb = document.getElementById('med-orb');
+  if (orb) orb.classList.add('pulsing');
+
+  var lbl = document.getElementById('med-status-label');
+  if (lbl) lbl.innerText = 'BREATHE';
+
+  medInterval = setInterval(tickMeditationSession, 1000);
+  checkMeditationCues();
+}
+
+function tickMeditationSession() {
+  if (!medActive) return;
+  medSecondsRemaining--;
+  updateMedTimerDisplay();
+  checkMeditationCues();
+
+  if (medSecondsRemaining <= 0) {
+    stopMeditationSession();
+  }
+}
+
+function checkMeditationCues() {
+  var cues = (medDurationMinutes === 5) ? MED_CUES_5 : MED_CUES_8;
+  for (var i = 0; i < cues.length; i++) {
+    if (cues[i].atSec === medSecondsRemaining) {
+      if (cues[i].chime > 0) playMeditationChime(cues[i].chime);
+      speakMeditationCue(cues[i].text);
+      break;
+    }
+  }
+}
+
+function stopMeditationSession() {
+  medActive = false;
+  if (medInterval) clearInterval(medInterval);
+  medInterval = null;
+
+  if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+
+  var btn = document.getElementById('btn-toggle-med');
+  if (btn) {
+    btn.innerText = '▶ Begin Guided Session';
+    btn.className = 'btn btn-emerald';
+  }
+
+  var orb = document.getElementById('med-orb');
+  if (orb) orb.classList.remove('pulsing');
+
+  var lbl = document.getElementById('med-status-label');
+  if (lbl) lbl.innerText = 'MEDITATE';
+
+  medSecondsRemaining = medDurationMinutes * 60;
+  updateMedTimerDisplay();
+
+  var capEl = document.getElementById('med-caption');
+  if (capEl) capEl.innerText = 'Session completed. Your nervous system is primed and restored.';
 }
 
 /* ========================================================
