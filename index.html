@@ -521,7 +521,7 @@ nav.bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; background: rgba
         <canvas id="trends-chart-canvas" style="width: 100%; height: 160px; display: block;"></canvas>
       </div>
 
-      <!-- STANDARD MODE ONLY: ESTIMATED 1RM STRENGTH PROFILER -->
+      <!-- ESTIMATED 1RM STRENGTH PROFILER (ACTIVE IN BOTH STANDARD & HYROX MODES) -->
       <div id="trend-strength-section" style="background: #F8FAFC; border: 1px solid var(--border-color); border-radius: 14px; padding: 14px; margin-bottom: 14px;">
         <div class="row" style="margin-bottom: 8px;">
           <h3 style="font-size: 12px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-muted);">Estimated 1RM Strength Profiler</h3>
@@ -735,7 +735,7 @@ nav.bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; background: rgba
    ======================================================== */
 var DAYS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
 var DAY_INDEX_MAP = { 'Mon': 0, 'Tue': 1, 'Wed': 2, 'Thu': 3, 'Fri': 4, 'Sat': 5, 'Sun': 6 };
-var STORAGE_VERSION = 'v1.1.1';
+var STORAGE_VERSION = 'v1.1.3';
 
 function getISOWeekNumber(d) {
   var date = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()));
@@ -1068,7 +1068,6 @@ function setProgramMode(mode, save) {
     if (hyroxView) hyroxView.classList.add('hidden');
   }
 
-  // Refresh Trends telemetry visibility when program mode switches
   renderTrendsDashboard();
 }
 
@@ -1284,7 +1283,7 @@ function renderNutritionTab(day) {
   }
 
   var currentWater = (appState.dailyTracking && appState.dailyTracking[`water_${day}`] !== undefined) ? appState.dailyTracking[`water_${day}`] : 1.0;
-  var currentShakes = (appState.dailyTracking && appState.dailyTracking[`shakes_${day}`] !== undefined) ? appState.dailyTracking[`shakes_${day}`] : 0;
+  var currentShakes = (appState.dailyTracking && appState.dailyTracking[`shakes_${day}`]) || 0;
 
   var waterDisp = document.getElementById('water-display');
   var shakesDisp = document.getElementById('shakes-display');
@@ -1612,29 +1611,11 @@ function renderTrendsDashboard() {
     proInsightEl.innerText = daysCounted > 0 ? `${Math.round(totalProteinLogged / daysCounted)} g` : '185 g';
   }
 
-  // 3. Conditional Visibility: Hyrox Block vs. Standard Strength Profiler
-  var hyroxSection = document.getElementById('trend-hyrox-section');
+  // 3. Estimated 1RM Strength Profiler (Active in BOTH Standard & Hyrox modes)
   var strengthSection = document.getElementById('trend-strength-section');
+  if (strengthSection) {
+    strengthSection.classList.remove('hidden');
 
-  if (appState.mode === 'hyrox') {
-    if (hyroxSection) hyroxSection.classList.remove('hidden');
-    if (strengthSection) strengthSection.classList.add('hidden');
-    
-    // Update Hyrox Telemetry
-    if (appState.hyroxBenchmarks) {
-      var pEl = document.getElementById('trend-hyrox-pace');
-      var skEl = document.getElementById('trend-hyrox-skierg');
-      var slEl = document.getElementById('trend-hyrox-sled');
-
-      if (pEl && appState.hyroxBenchmarks.pace) pEl.innerText = appState.hyroxBenchmarks.pace;
-      if (skEl && appState.hyroxBenchmarks.skierg) skEl.innerText = appState.hyroxBenchmarks.skierg;
-      if (slEl && appState.hyroxBenchmarks.sled) slEl.innerText = appState.hyroxBenchmarks.sled;
-    }
-  } else {
-    if (hyroxSection) hyroxSection.classList.add('hidden');
-    if (strengthSection) strengthSection.classList.remove('hidden');
-
-    // Update 1RM Strength Profiler
     var benchKey = 'Wed_w1_set_0';
     var squatKey = 'Sun_su1_set_0';
     var ohpKey = 'Wed_w3_set_0';
@@ -1668,7 +1649,26 @@ function renderTrendsDashboard() {
     if (rSub) rSub.innerText = `Working: ${rdlW}kg × ${rdlR}`;
   }
 
-  // 4. Algorithmic Coach Advisory Message
+  // 4. Hyrox Station Telemetry (Visible ONLY in Hyrox Block mode)
+  var hyroxSection = document.getElementById('trend-hyrox-section');
+  if (appState.mode === 'hyrox') {
+    if (hyroxSection) {
+      hyroxSection.classList.remove('hidden');
+      if (appState.hyroxBenchmarks) {
+        var pEl = document.getElementById('trend-hyrox-pace');
+        var skEl = document.getElementById('trend-hyrox-skierg');
+        var slEl = document.getElementById('trend-hyrox-sled');
+
+        if (pEl && appState.hyroxBenchmarks.pace) pEl.innerText = appState.hyroxBenchmarks.pace;
+        if (skEl && appState.hyroxBenchmarks.skierg) skEl.innerText = appState.hyroxBenchmarks.skierg;
+        if (slEl && appState.hyroxBenchmarks.sled) slEl.innerText = appState.hyroxBenchmarks.sled;
+      }
+    }
+  } else {
+    if (hyroxSection) hyroxSection.classList.add('hidden');
+  }
+
+  // 5. Algorithmic Coach Advisory Message
   var coachBadge = document.getElementById('trend-readiness-badge');
   var coachMsg = document.getElementById('trend-readiness-msg');
   var soreness = (appState.fatigueData && appState.fatigueData.soreness) || 4;
@@ -1702,7 +1702,7 @@ function renderTrendsDashboard() {
     }
   }
 
-  // 5. Render Check-in History List
+  // 6. Render Check-in History List
   var listContainer = document.getElementById('trends-history-list');
   if (listContainer) {
     if (logs.length === 0) {
