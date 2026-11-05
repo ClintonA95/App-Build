@@ -312,6 +312,30 @@ nav.bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; background: rgba
         </div>
       </div>
     </div>
+
+    <!-- EXTRA / OFF-PROGRAM EXERCISES (Visible across Standard & Hyrox) -->
+    <div class="card" style="margin-top: 12px;">
+      <div class="row" style="margin-bottom: 8px;">
+        <div>
+          <h3 style="font-size: 13px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-muted);">Extra / Off-Program Exercises</h3>
+          <p style="font-size: 11px; color: var(--text-muted);">Log custom volume outside the program</p>
+        </div>
+        <span class="badge badge-gray">Free Entry</span>
+      </div>
+
+      <div style="background: #F8FAFC; border: 1px solid var(--border-color); border-radius: 12px; padding: 12px; margin-bottom: 10px;">
+        <div style="margin-bottom: 8px;">
+          <input type="text" id="extra-ex-name" placeholder="Exercise name (e.g. Incline DB Curl, Calves)" style="font-size: 12px;">
+        </div>
+        <div class="row" style="gap: 8px; margin-bottom: 8px;">
+          <input type="text" id="extra-ex-weight" placeholder="Weight (e.g. 16kg, BW)" style="font-size: 12px;">
+          <input type="text" id="extra-ex-reps" placeholder="Reps / Sets (e.g. 3x12, 15)" style="font-size: 12px;">
+        </div>
+        <button onclick="addExtraExercise()" class="btn" style="width: 100%; font-size: 12px; padding: 8px;">+ Add Extra Exercise</button>
+      </div>
+
+      <div id="extra-exercise-list-container"></div>
+    </div>
   </section>
 
   <!-- TAB: NUTRITION -->
@@ -328,14 +352,14 @@ nav.bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; background: rgba
         </button>
       </div>
 
-      <!-- Scoped Daily Quick Trackers -->
+      <!-- Scoped Daily Quick Trackers (Starts at 0.0L Water and 0/1 Shakes) -->
       <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 16px;">
         <div class="counter-box">
           <div class="row" style="font-size: 11px; font-weight: 700; color: var(--text-muted); margin-bottom: 6px;">
             <span>💧 Water</span>
             <span>Target: 3.5L+</span>
           </div>
-          <div id="water-display" style="font-size: 20px; font-weight: 800; color: var(--accent); font-family: 'JetBrains Mono', monospace; margin-bottom: 8px;">1.0L</div>
+          <div id="water-display" style="font-size: 20px; font-weight: 800; color: var(--accent); font-family: 'JetBrains Mono', monospace; margin-bottom: 8px;">0.0L</div>
           <div class="row" style="gap: 6px;">
             <button onclick="adjustWater(-0.5)" class="btn btn-outline" style="flex: 1; padding: 6px 0;">-</button>
             <button onclick="adjustWater(0.5)" class="btn" style="flex: 2; padding: 6px 0; font-size: 12px;">+0.5L</button>
@@ -767,6 +791,11 @@ function getISOWeekNumber(d) {
   return Math.ceil((((date - yearStart) / 86400000) + 1) / 7);
 }
 
+function getCurrentWeekKey() {
+  var now = new Date();
+  return `${now.getFullYear()}_W${getISOWeekNumber(now)}`;
+}
+
 function getDateForDay(targetDay) {
   var now = new Date();
   var currentJsDay = now.getDay(); 
@@ -836,7 +865,7 @@ var WORKOUT_SCHEDULE = {
   },
   'Thu': {
     title: 'AMRAP & Aesthetics',
-    focus: 'Upper Body Aesthetics, AMRAP & Swim',
+    focus: 'Upper Body Aesthetics & AMRAP',
     fuelType: 'Starch Day',
     badgeType: 'badge-purple',
     exercises: [
@@ -846,7 +875,7 @@ var WORKOUT_SCHEDULE = {
       { id: 'th4', name: 'Lateral Raises', type: 'STRENGTH SETS', sets: buildSets(10, 3, '8') },
       { id: 'th5', name: 'Face Pulls', type: 'STRENGTH SETS', sets: buildSets(15, 3, '22.5') },
       { id: 'th6', name: 'Cable Crunch', type: 'STRENGTH SETS', sets: buildSets(10, 3, '30') },
-      { id: 'th7', name: '15-Min Race Pace AMRAP & Swim', type: 'ENGINE / AEROBIC', sets: [{ defaultWeight: 'AMRAP', defaultReps: '15m + Swim' }] }
+      { id: 'th7', name: '15-Min Race Pace AMRAP', type: 'ENGINE / AEROBIC', sets: [{ defaultWeight: 'AMRAP', defaultReps: '15m' }] }
     ]
   },
   'Fri': {
@@ -885,8 +914,7 @@ var WORKOUT_SCHEDULE = {
 };
 
 /* ========================================================
-   CALIBRATED NUTRITION SCHEDULE (CLEAN TIMELINES)
-   Standalone Shakes & Dates are tracked via their counters
+   CALIBRATED NUTRITION SCHEDULE
    ======================================================== */
 var MEAL_SCHEDULE = {
   'Mon': [
@@ -898,7 +926,7 @@ var MEAL_SCHEDULE = {
   'Tue': [
     { time: '08:00', name: 'Morning Hydration & Electrolytes', note: '500ml Water + Bulk Electrolytes', cals: 0, protein: 0 },
     { time: '08:30', name: '5 Eggs, 4 Sausages & ½ Avocado', note: 'Lidl Large Eggs, Chicken Sausages & ½ Medium Ripe Avocado • Cook in 1 Cal Spray', cals: 740, protein: 72 },
-    { time: '13:30', name: 'Greek Yogurt (250g) & Almonds', note: 'Lidl Milbona 0% Greek Yogurt & 40g Whole Almonds', cals: 380, protein: 34 },
+    { time: '13:30', name: 'Greek Yogurt (250g) & Almonds', note: 'Lidl Milbona 0% Greek Yogurt, 40g Whole Almonds & ½ Scoop Applied Nutrition ISO-XP', cals: 445, protein: 47 },
     { time: '14:30', name: 'Mid-Afternoon Electrolytes', note: '500ml Water + ½ tsp Sea Salt or Bulk Electrolytes', cals: 0, protein: 0 },
     { time: '19:00', name: '3x Chicken Thighs, Turkey Mince & Greens', note: 'Lidl Chicken Thighs, 125g Turkey Mince & Greens • Cook in 1 Cal Spray, finish with 1 tbsp Olive Oil', cals: 815, protein: 98 }
   ],
@@ -906,7 +934,7 @@ var MEAL_SCHEDULE = {
     { time: '07:30', name: 'Pre-Lift Hydration & Electrolytes', note: '500ml Water + Bulk Electrolytes', cals: 0, protein: 0 },
     { time: '08:00', name: 'Red Grapes & 1x Medjool Date', note: '100g Red Grapes & 1 Healthy Supplies Medjool Date', cals: 136, protein: 1 },
     { time: '10:30', name: '3x Sourdough, 4 Eggs & 2 Sausages', note: 'Jordans Sourdough, Lidl Large Eggs, Chicken Sausages & 15g Honey • Cook in 1 Cal Spray', cals: 770, protein: 56 },
-    { time: '16:00', name: '85g Oats, Milbona 0% & Almonds', note: 'Lidl Rolled Oats, 150g Milbona 0%, 15g Chia Seeds & 25g Whole Almonds', cals: 625, protein: 33 },
+    { time: '16:00', name: 'Overnight Oats', note: 'Lidl Rolled Oats (85g), 150g Milbona 0%, 15g Chia Seeds, 25g Whole Almonds & 1.5 Scoops Applied Nutrition ISO-XP', cals: 820, protein: 71 },
     { time: '17:45', name: 'Pre-Pitch Hydration & Electrolytes', note: '500ml Water + Bulk Electrolytes', cals: 0, protein: 0 },
     { time: '20:45', name: '3x Chicken Thighs, Basmati Rice & Greens', note: 'Lidl Chicken Thighs, 95g (Dry) Basmati Rice & Greens • Cook in 1 Cal Spray (No Olive Oil)', cals: 830, protein: 76 }
   ],
@@ -914,20 +942,20 @@ var MEAL_SCHEDULE = {
     { time: '07:15', name: 'Pre-Workout Hydration & Electrolytes', note: '500ml Water + Bulk Electrolytes', cals: 0, protein: 0 },
     { time: '07:45', name: 'Red Grapes & 1x Medjool Date', note: '100g Red Grapes & 1 Healthy Supplies Medjool Date', cals: 136, protein: 1 },
     { time: '09:00', name: '3x Sourdough, 4 Eggs & 2 Sausages', note: 'Jordans Sourdough, Lidl Large Eggs, Chicken Sausages & 15g Honey • Cook in 1 Cal Spray', cals: 770, protein: 56 },
-    { time: '14:30', name: '250g Milbona 0%, 45g Oats & Almonds', note: 'Lidl Milbona 0% Greek Yogurt, 45g Rolled Oats & 25g Whole Almonds', cals: 455, protein: 35 },
+    { time: '14:30', name: 'Greek Yogurt (250g) & Almonds', note: 'Lidl Milbona 0% Greek Yogurt, 40g Whole Almonds & ½ Scoop Applied Nutrition ISO-XP', cals: 445, protein: 47 },
     { time: '19:00', name: '2x Thighs, Turkey Mince & Basmati Rice', note: '2x Lidl Thighs, 125g Turkey Mince, 85g (Dry) Rice & Greens • Cook in 1 Cal Spray (No Olive Oil)', cals: 800, protein: 78 }
   ],
   'Fri': [
     { time: '08:00', name: 'Morning Hydration & Electrolytes', note: '500ml Water + Bulk Electrolytes', cals: 0, protein: 0 },
     { time: '08:30', name: '5 Eggs, 4 Sausages & ½ Avocado', note: 'Lidl Large Eggs, Chicken Sausages & ½ Medium Ripe Avocado • Cook in 1 Cal Spray', cals: 740, protein: 72 },
-    { time: '13:30', name: 'Greek Yogurt (250g) & Almonds', note: 'Lidl Milbona 0% Greek Yogurt & 40g Whole Almonds', cals: 380, protein: 34 },
+    { time: '13:30', name: 'Greek Yogurt (250g) & Almonds', note: 'Lidl Milbona 0% Greek Yogurt, 40g Whole Almonds & ½ Scoop Applied Nutrition ISO-XP', cals: 445, protein: 47 },
     { time: '14:30', name: 'Mid-Afternoon Electrolytes', note: '500ml Water + ½ tsp Sea Salt or Bulk Electrolytes', cals: 0, protein: 0 },
     { time: '19:00', name: '3x Chicken Thighs, Turkey Mince & Greens', note: 'Lidl Chicken Thighs, 125g Turkey Mince & Greens • Cook in 1 Cal Spray, finish with 1 tbsp Olive Oil', cals: 815, protein: 98 }
   ],
   'Sat': [
     { time: '07:30', name: 'Pre-Run Hydration & Electrolytes', note: '500ml Water + Bulk Electrolytes', cals: 0, protein: 0 },
     { time: '08:00', name: 'Grapes, 2x Sourdough & 1x Date', note: '100g Red Grapes, 2x Jordans Sourdough (+Honey) & 1 Healthy Supplies Date', cals: 336, protein: 8 },
-    { time: '11:00', name: '75g Oats, Milbona 0% & Chia (+ISO-XP)', note: 'Lidl Oats, 150g Milbona 0%, 1x Scoop ISO-XP, 15g Chia & 25g Almonds', cals: 650, protein: 52 },
+    { time: '11:00', name: 'Overnight Oats', note: 'Lidl Rolled Oats (75g), 150g Milbona 0%, 15g Chia Seeds, 25g Whole Almonds & 1.5 Scoops Applied Nutrition ISO-XP', cals: 780, protein: 70 },
     { time: '14:30', name: '4 Eggs, Turkey Mince, 2x Sourdough & 1x Date', note: '4x Eggs, 100g Turkey Mince, 2x Sourdough & 1 Healthy Supplies Date • Cook in 1 Cal Spray', cals: 686, protein: 56 },
     { time: '19:00', name: '3x Chicken Thighs, 200g Fries & Spicy Mayo', note: '3x Lidl Thighs, 200g Air-Fried Fries, 2 tbsp Hellmann\'s Spicy Mayo & Salad • Cook in 1 Cal Spray', cals: 875, protein: 70 }
   ],
@@ -935,14 +963,13 @@ var MEAL_SCHEDULE = {
     { time: '07:15', name: 'Pre-Squat Hydration & Electrolytes', note: '500ml Water + Bulk Electrolytes', cals: 0, protein: 0 },
     { time: '07:45', name: 'Red Grapes & 1x Medjool Date', note: '100g Red Grapes & 1 Healthy Supplies Medjool Date', cals: 136, protein: 1 },
     { time: '09:00', name: '3x Sourdough, 4 Eggs & 2 Sausages', note: 'Jordans Sourdough, Lidl Large Eggs, Chicken Sausages & 15g Honey • Cook in 1 Cal Spray', cals: 770, protein: 56 },
-    { time: '14:30', name: '250g Milbona 0%, 45g Oats & Almonds', note: 'Lidl Milbona 0% Greek Yogurt, 45g Rolled Oats & 25g Whole Almonds', cals: 455, protein: 35 },
+    { time: '14:30', name: 'Greek Yogurt (250g) & Almonds', note: 'Lidl Milbona 0% Greek Yogurt, 40g Whole Almonds & ½ Scoop Applied Nutrition ISO-XP', cals: 445, protein: 47 },
     { time: '19:00', name: '2x Thighs, Turkey Mince & Basmati Rice', note: '2x Lidl Thighs, 125g Turkey Mince, 85g (Dry) Rice & Greens • Cook in 1 Cal Spray (No Olive Oil)', cals: 800, protein: 78 }
   ]
 };
 
 /* ========================================================
    WEEKLY GROCERY DATA SCHEMA
-   Separated into exact store departments (Lidl & Tesco)
    ======================================================== */
 var GROCERY_CATEGORIES = [
   {
@@ -1000,6 +1027,7 @@ var activeDay = 'Mon';
 var appState = {
   version: STORAGE_VERSION,
   mode: 'standard',
+  lastWeekKey: '',
   currentWeight: 84.9,
   weightLogs: [],
   sentiments: [],
@@ -1027,6 +1055,7 @@ function loadState() {
           if (parsed.fatigueData) appState.fatigueData = parsed.fatigueData;
           if (parsed.sentiments) appState.sentiments = parsed.sentiments;
           if (parsed.groceryChecks) appState.groceryChecks = parsed.groceryChecks;
+          if (parsed.lastWeekKey) appState.lastWeekKey = parsed.lastWeekKey;
         }
       }
     }
@@ -1052,10 +1081,28 @@ function persistState() {
 }
 
 /* ========================================================
+   AUTOMATED WEEKLY RESET (MONDAY MORNING TURNOVER)
+   ======================================================== */
+function checkWeeklyAutoReset() {
+  var currentWeekKey = getCurrentWeekKey();
+  if (appState.lastWeekKey && appState.lastWeekKey !== currentWeekKey) {
+    // Week rolled over to Monday: Clear daily checks and grocery checklist
+    appState.dailyTracking = {};
+    appState.groceryChecks = {};
+    appState.lastWeekKey = currentWeekKey;
+    persistState();
+  } else if (!appState.lastWeekKey) {
+    appState.lastWeekKey = currentWeekKey;
+    persistState();
+  }
+}
+
+/* ========================================================
    INITIALIZATION & DAY SELECTION
    ======================================================== */
 function init() {
   loadState();
+  checkWeeklyAutoReset();
 
   var jsDay = new Date().getDay();
   var dayMap = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
@@ -1115,6 +1162,7 @@ function selectDay(day) {
   }
 
   renderWorkoutTab(day);
+  renderExtraExercises(day);
   renderNutritionTab(day);
 }
 
@@ -1304,6 +1352,99 @@ function toggleDayWorkout() {
 }
 
 /* ========================================================
+   EXTRA / OFF-PROGRAM EXERCISE LOGGER
+   ======================================================== */
+function addExtraExercise() {
+  var nameEl = document.getElementById('extra-ex-name');
+  var weightEl = document.getElementById('extra-ex-weight');
+  var repsEl = document.getElementById('extra-ex-reps');
+
+  var name = nameEl ? nameEl.value.trim() : '';
+  var weight = weightEl ? weightEl.value.trim() : '';
+  var reps = repsEl ? repsEl.value.trim() : '';
+
+  if (!name) {
+    alert('Please enter an exercise name.');
+    return;
+  }
+
+  var key = `extra_ex_${activeDay}`;
+  if (!appState.dailyTracking) appState.dailyTracking = {};
+  if (!Array.isArray(appState.dailyTracking[key])) appState.dailyTracking[key] = [];
+
+  appState.dailyTracking[key].push({
+    id: `extra_${Date.now()}`,
+    name: name,
+    weight: weight || '-',
+    reps: reps || '-',
+    completed: false
+  });
+
+  if (nameEl) nameEl.value = '';
+  if (weightEl) weightEl.value = '';
+  if (repsEl) repsEl.value = '';
+
+  persistState();
+  renderExtraExercises(activeDay);
+}
+
+function toggleExtraExerciseDone(id) {
+  var key = `extra_ex_${activeDay}`;
+  if (appState.dailyTracking && Array.isArray(appState.dailyTracking[key])) {
+    for (var i = 0; i < appState.dailyTracking[key].length; i++) {
+      if (appState.dailyTracking[key][i].id === id) {
+        appState.dailyTracking[key][i].completed = !appState.dailyTracking[key][i].completed;
+        break;
+      }
+    }
+    persistState();
+    renderExtraExercises(activeDay);
+  }
+}
+
+function removeExtraExercise(id) {
+  var key = `extra_ex_${activeDay}`;
+  if (appState.dailyTracking && Array.isArray(appState.dailyTracking[key])) {
+    appState.dailyTracking[key] = appState.dailyTracking[key].filter(function(item) {
+      return item.id !== id;
+    });
+    persistState();
+    renderExtraExercises(activeDay);
+  }
+}
+
+function renderExtraExercises(day) {
+  var container = document.getElementById('extra-exercise-list-container');
+  if (!container) return;
+
+  var key = `extra_ex_${day}`;
+  var items = (appState.dailyTracking && appState.dailyTracking[key]) || [];
+
+  if (items.length === 0) {
+    container.innerHTML = '<p style="font-size: 11px; color: var(--text-muted); padding: 4px 0;">No off-program exercises logged for today.</p>';
+    return;
+  }
+
+  var html = '';
+  for (var i = 0; i < items.length; i++) {
+    var ex = items[i];
+    html += `<div class="exercise-card ${ex.completed ? 'completed-exercise' : ''}" style="margin-top: 6px; padding: 10px 12px;">`;
+    html += '<div class="row">';
+    html += '<div>';
+    html += `<div class="ex-title" style="font-size: 12px; font-weight: 700; color: var(--text-main);">${ex.name}</div>`;
+    html += `<div style="font-size: 11px; font-weight: 700; color: var(--text-muted); font-family: 'JetBrains Mono', monospace; margin-top: 2px;">${ex.weight} × ${ex.reps}</div>`;
+    html += '</div>';
+    html += '<div class="flex-gap" style="gap: 6px;">';
+    html += `<button onclick="toggleExtraExerciseDone('${ex.id}')" class="check-btn ${ex.completed ? 'completed' : ''}">✓</button>`;
+    html += `<button onclick="removeExtraExercise('${ex.id}')" style="background: none; border: none; color: #EF4444; font-size: 14px; font-weight: 800; cursor: pointer; padding: 4px;">✕</button>`;
+    html += '</div>';
+    html += '</div>';
+    html += '</div>';
+  }
+  container.innerHTML = html;
+}
+
+/* ========================================================
    NUTRITION ENGINE, SNACKS & OFF-PLAN FOOD
    ======================================================== */
 function isDayNutritionComplete(day) {
@@ -1371,8 +1512,9 @@ function renderNutritionTab(day) {
     markBtn.innerText = isComplete ? '↺ Undo Meals' : '✓ Mark Meals Done';
   }
 
-  var currentWater = (appState.dailyTracking && appState.dailyTracking[`water_${day}`] !== undefined) ? appState.dailyTracking[`water_${day}`] : 1.0;
-  var currentShakes = (appState.dailyTracking && appState.dailyTracking[`shakes_${day}`]) || 0;
+  // Water starts at 0.0L and shakes at 0/1 each day
+  var currentWater = (appState.dailyTracking && appState.dailyTracking[`water_${day}`] !== undefined) ? appState.dailyTracking[`water_${day}`] : 0.0;
+  var currentShakes = (appState.dailyTracking && appState.dailyTracking[`shakes_${day}`] !== undefined) ? appState.dailyTracking[`shakes_${day}`] : 0;
 
   var waterDisp = document.getElementById('water-display');
   var shakesDisp = document.getElementById('shakes-display');
@@ -1555,7 +1697,7 @@ function toggleDayNutrition() {
 function adjustWater(amount) {
   var waterKey = `water_${activeDay}`;
   if (!appState.dailyTracking) appState.dailyTracking = {};
-  var current = appState.dailyTracking[waterKey] !== undefined ? appState.dailyTracking[waterKey] : 1.0;
+  var current = appState.dailyTracking[waterKey] !== undefined ? appState.dailyTracking[waterKey] : 0.0;
   current = Math.max(0, current + amount);
   appState.dailyTracking[waterKey] = current;
   persistState();
@@ -2362,6 +2504,7 @@ function saveHyroxBenchmark(type) {
 function resetCurrentWeek() {
   if (confirm("Reset current week's workout and nutrition checks? Your custom weight logs and set numbers will remain preserved.")) {
     appState.dailyTracking = {};
+    appState.groceryChecks = {};
     persistState();
     selectDay(activeDay);
     alert('Week reset successfully!');
