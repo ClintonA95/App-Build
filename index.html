@@ -883,7 +883,8 @@ var WORKOUT_SCHEDULE = {
     fuelType: 'Non-Starch Day',
     badgeType: 'badge-gray',
     exercises: [
-      { id: 't1', name: 'Rest / Full Body Yoga', type: 'SKILL / DRILL', sets: [{ defaultWeight: '30 mins', defaultReps: 'Yoga' }] }
+      { id: 't_rest', name: 'Rest', description: 'Rest full day', type: 'RECOVERY', sets: [{ defaultWeight: 'Rest', defaultReps: 'Full Day' }] },
+      { id: 't_yoga', name: 'Yoga/Stretching', description: 'Active recovery and mobility', type: 'SKILL / DRILL', sets: [{ defaultWeight: '30 mins', defaultReps: 'Routine' }] }
     ]
   },
   'Wed': {
@@ -922,7 +923,8 @@ var WORKOUT_SCHEDULE = {
     fuelType: 'Non-Starch Day',
     badgeType: 'badge-gray',
     exercises: [
-      { id: 'f1', name: 'Rest / Full Body Yoga', type: 'SKILL / DRILL', sets: [{ defaultWeight: '30 mins', defaultReps: 'Yoga' }] }
+      { id: 'f_rest', name: 'Rest', description: 'Rest full day', type: 'RECOVERY', sets: [{ defaultWeight: 'Rest', defaultReps: 'Full Day' }] },
+      { id: 'f_yoga', name: 'Yoga/Stretching', description: 'Active recovery and mobility', type: 'SKILL / DRILL', sets: [{ defaultWeight: '30 mins', defaultReps: 'Routine' }] }
     ]
   },
   'Sat': {
@@ -1424,13 +1426,22 @@ function renderWorkoutTab(day) {
       return appState.dailyTracking && appState.dailyTracking[k] && appState.dailyTracking[k].completed;
     });
 
-    var badgeClass = ex.type.indexOf('ENGINE') !== -1 ? 'badge-blue' : (ex.type.indexOf('SKILL') !== -1 ? 'badge-gray' : 'badge-purple');
+    var badgeClass = ex.type.indexOf('ENGINE') !== -1 ? 'badge-blue' : 
+                     (ex.type.indexOf('SKILL') !== -1 ? 'badge-gray' : 
+                     (ex.type.indexOf('RECOVERY') !== -1 ? 'badge-emerald' : 'badge-purple'));
 
     html += `<div class="exercise-card ${allSetsCompleted ? 'completed-exercise' : ''}" id="ex-card-${ex.id}">`;
-    html += '<div class="row" style="margin-bottom: 8px;">';
+    html += '<div class="row" style="margin-bottom: 4px;">';
     html += `<h4 class="ex-title" style="font-size: 13px; font-weight: 800;">${ex.name}</h4>`;
     html += `<span class="badge ${badgeClass}">${ex.type}</span>`;
     html += '</div>';
+
+    if (ex.description) {
+      html += `<p style="font-size: 11px; color: var(--text-muted); margin-bottom: 8px;">${ex.description}</p>`;
+    } else {
+      html += '<div style="margin-bottom: 6px;"></div>';
+    }
+
     html += '<div>';
 
     for (var j = 0; j < ex.sets.length; j++) {
@@ -2065,7 +2076,7 @@ function renderTrendsDashboard() {
     proInsightEl.innerText = daysCounted > 0 ? `${Math.round(totalProteinLogged / daysCounted)} g` : '185 g';
   }
 
-  // 3. Estimated 1RM Strength Profiler (Dynamically finds lifts across all days)
+  // 3. Estimated 1RM Strength Profiler
   var strengthSection = document.getElementById('trend-strength-section');
   if (strengthSection) {
     strengthSection.classList.remove('hidden');
