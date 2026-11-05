@@ -37,6 +37,7 @@ main { flex: 1; max-width: 600px; width: 100%; margin: 0 auto; padding: 14px 12p
 .badge-gray { background: #F1F5F9; color: #475569; border: 1px solid #E2E8F0; }
 .badge-emerald { background: #ECFDF5; color: #047857; border: 1px solid #A7F3D0; }
 .badge-red { background: #FEF2F2; color: var(--accent-red); border: 1px solid #FECACA; }
+.badge-swap { background: #FEF3C7; color: #92400E; border: 1px solid #FDE68A; }
 
 /* Day Scroll */
 .day-scroll { display: flex; gap: 6px; overflow-x: auto; padding: 8px 0 10px; scrollbar-width: none; min-height: 44px; }
@@ -240,10 +241,11 @@ nav.bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; background: rgba
     </div>
   </div>
 
-  <!-- Dynamic Sub-bar with Grocery List Button -->
+  <!-- Dynamic Sub-bar with Swap Day & Grocery List Buttons -->
   <div class="sub-bar">
     <span id="date-display-label">27, October 2026 (W44)</span>
     <div class="flex-gap">
+      <button onclick="openSwapModal()" class="btn btn-outline" style="padding: 4px 8px; font-size: 10px; border-radius: 6px; font-weight: 700; height: 26px; line-height: 1;">⇄ Swap Day</button>
       <button onclick="openGroceryModal()" class="btn btn-outline" style="padding: 4px 8px; font-size: 10px; border-radius: 6px; font-weight: 700; height: 26px; line-height: 1;">🛒 Grocery List</button>
       <span id="today-indicator" class="today-tag">TODAY</span>
     </div>
@@ -256,9 +258,10 @@ nav.bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; background: rgba
     <div id="view-standard-workout" class="card">
       <div class="row" style="margin-bottom: 12px;">
         <div>
-          <div class="flex-gap" style="margin-bottom: 4px;">
+          <div class="flex-gap" style="margin-bottom: 4px; flex-wrap: wrap;">
             <span id="workout-day-badge" class="badge badge-blue">Monday</span>
             <span id="workout-fuel-badge" class="badge badge-purple">Starch Day</span>
+            <span id="workout-swap-badge" class="badge badge-swap hidden">⇄ Swapped</span>
           </div>
           <h2 id="workout-day-title" style="font-size: 17px; font-weight: 800;">Recovery Engine</h2>
           <p id="workout-day-focus" style="font-size: 11px; color: var(--text-muted);">Zone 2 Run (45 mins)</p>
@@ -313,7 +316,7 @@ nav.bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; background: rgba
       </div>
     </div>
 
-    <!-- EXTRA / OFF-PROGRAM EXERCISES (Visible across Standard & Hyrox) -->
+    <!-- EXTRA / OFF-PROGRAM EXERCISES (Active in both Standard & Hyrox) -->
     <div class="card" style="margin-top: 12px;">
       <div class="row" style="margin-bottom: 8px;">
         <div>
@@ -343,8 +346,11 @@ nav.bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; background: rgba
     <div class="card">
       <div class="row" style="margin-bottom: 12px;">
         <div>
-          <span class="badge badge-purple" id="nutrition-card-badge">Starch Day (Carbs High)</span>
-          <h2 style="font-size: 17px; font-weight: 800; margin-top: 4px;">Targeted Fueling Schedule</h2>
+          <div class="flex-gap" style="margin-bottom: 4px; flex-wrap: wrap;">
+            <span class="badge badge-purple" id="nutrition-card-badge">Starch Day (Carbs High)</span>
+            <span id="nutrition-swap-badge" class="badge badge-swap hidden">⇄ Swapped</span>
+          </div>
+          <h2 style="font-size: 17px; font-weight: 800; margin-top: 2px;">Targeted Fueling Schedule</h2>
           <p style="font-size: 11px; color: var(--text-muted);">Prioritize clean starches around training</p>
         </div>
         <button id="btn-toggle-day-nutrition" onclick="toggleDayNutrition()" class="btn btn-outline" style="font-size: 11px; padding: 6px 10px;">
@@ -352,7 +358,7 @@ nav.bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; background: rgba
         </button>
       </div>
 
-      <!-- Scoped Daily Quick Trackers (Starts at 0.0L Water and 0/1 Shakes) -->
+      <!-- Scoped Daily Quick Trackers -->
       <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 16px;">
         <div class="counter-box">
           <div class="row" style="font-size: 11px; font-weight: 700; color: var(--text-muted); margin-bottom: 6px;">
@@ -459,7 +465,7 @@ nav.bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; background: rgba
         <div id="sentiment-log-container" style="display: flex; flex-direction: column; gap: 8px;"></div>
       </div>
 
-      <!-- MEDITATION (AMBIENT MUSIC SYNTHESIZER & BELLS) -->
+      <!-- MEDITATION -->
       <div style="border-top: 1px solid var(--border-color); padding-top: 16px;">
         <div class="row" style="margin-bottom: 6px;">
           <div>
@@ -562,29 +568,29 @@ nav.bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; background: rgba
         <p style="font-size: 10px; color: var(--text-muted); margin-bottom: 10px;">Calculated dynamically from your working strength sets</p>
         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
           <div style="background: white; border: 1px solid var(--border-color); border-radius: 10px; padding: 10px;">
-            <div style="font-size: 10px; font-weight: 700; color: var(--text-muted);">Bench Press (Wed)</div>
+            <div style="font-size: 10px; font-weight: 700; color: var(--text-muted);">Bench Press</div>
             <div id="1rm-bench-val" style="font-size: 16px; font-weight: 800; font-family: 'JetBrains Mono', monospace; color: var(--text-main); margin-top: 2px;">122.5 kg</div>
             <div id="1rm-bench-sub" style="font-size: 9px; color: var(--accent); font-weight: 700; margin-top: 2px;">Working: 105kg × 5</div>
           </div>
           <div style="background: white; border: 1px solid var(--border-color); border-radius: 10px; padding: 10px;">
-            <div style="font-size: 10px; font-weight: 700; color: var(--text-muted);">Back Squat (Sun)</div>
+            <div style="font-size: 10px; font-weight: 700; color: var(--text-muted);">Back Squat</div>
             <div id="1rm-squat-val" style="font-size: 16px; font-weight: 800; font-family: 'JetBrains Mono', monospace; color: var(--text-main); margin-top: 2px;">121.0 kg</div>
             <div id="1rm-squat-sub" style="font-size: 9px; color: var(--accent); font-weight: 700; margin-top: 2px;">Working: 110kg × 3</div>
           </div>
           <div style="background: white; border: 1px solid var(--border-color); border-radius: 10px; padding: 10px;">
-            <div style="font-size: 10px; font-weight: 700; color: var(--text-muted);">Military Press (Wed)</div>
+            <div style="font-size: 10px; font-weight: 700; color: var(--text-muted);">Military Press</div>
             <div id="1rm-ohp-val" style="font-size: 16px; font-weight: 800; font-family: 'JetBrains Mono', monospace; color: var(--text-main); margin-top: 2px;">75.0 kg</div>
             <div id="1rm-ohp-sub" style="font-size: 9px; color: var(--accent); font-weight: 700; margin-top: 2px;">Working: 62.5kg × 6</div>
           </div>
           <div style="background: white; border: 1px solid var(--border-color); border-radius: 10px; padding: 10px;">
-            <div style="font-size: 10px; font-weight: 700; color: var(--text-muted);">Romanian Deadlift (Sun)</div>
+            <div style="font-size: 10px; font-weight: 700; color: var(--text-muted);">Romanian Deadlift</div>
             <div id="1rm-rdl-val" style="font-size: 16px; font-weight: 800; font-family: 'JetBrains Mono', monospace; color: var(--text-main); margin-top: 2px;">144.0 kg</div>
             <div id="1rm-rdl-sub" style="font-size: 9px; color: var(--accent); font-weight: 700; margin-top: 2px;">Working: 120kg × 6</div>
           </div>
         </div>
       </div>
 
-      <!-- HYROX BLOCK ONLY: HYROX ENGINE BENCHMARKS TELEMETRY -->
+      <!-- HYROX BLOCK ONLY: HYROX TELEMETRY -->
       <div id="trend-hyrox-section" class="hidden" style="background: #FEF2F2; border: 1px solid #FECACA; border-radius: 14px; padding: 14px; margin-bottom: 14px;">
         <div class="row" style="margin-bottom: 8px;">
           <h3 style="font-size: 12px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; color: #991B1B;">Hyrox Station Telemetry</h3>
@@ -659,7 +665,7 @@ nav.bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; background: rgba
       <div style="display: flex; flex-direction: column; gap: 12px;">
         <div style="padding: 12px; background: #FEF2F2; border-radius: 12px; border: 1px solid #FEE2E2;">
           <h3 style="font-size: 13px; font-weight: 800; color: #991B1B; margin-bottom: 2px;">Weekly Reset</h3>
-          <p style="font-size: 11px; color: #7F1D1D; margin-bottom: 10px;">Clear all checks for the new week without losing custom lift weights.</p>
+          <p style="font-size: 11px; color: #7F1D1D; margin-bottom: 10px;">Clear all checks and day swaps for the new week without losing custom lift weights.</p>
           <button onclick="resetCurrentWeek()" class="btn btn-danger" style="width: 100%; font-size: 12px;">🔄 Reset Current Week</button>
         </div>
 
@@ -758,6 +764,30 @@ nav.bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; background: rgba
   </div>
 </div>
 
+<!-- MODAL: SWAP DAY (PACKAGE DEAL) -->
+<div id="modal-swap" class="modal-overlay hidden">
+  <div class="modal-box">
+    <div class="row" style="margin-bottom: 10px;">
+      <div>
+        <h3 style="font-size: 16px; font-weight: 800;">⇄ Swap Day Routine</h3>
+        <p style="font-size: 11px; color: var(--text-muted);">Package deal: Swaps workout & nutrition together</p>
+      </div>
+      <button onclick="closeSwapModal()" style="background: none; border: none; font-size: 18px; cursor: pointer; color: var(--text-muted);">✕</button>
+    </div>
+
+    <p style="font-size: 12px; font-weight: 700; color: var(--text-main); margin-bottom: 10px;">
+      Swap <span id="swap-active-day-name" style="color: var(--accent); font-weight: 800;">Monday</span> with:
+    </p>
+
+    <div id="swap-day-options" style="display: flex; flex-direction: column; gap: 6px; max-height: 280px; overflow-y: auto; margin-bottom: 14px;"></div>
+
+    <div class="row" style="gap: 8px;">
+      <button onclick="resetDaySwaps()" class="btn btn-outline" style="flex: 1; font-size: 11px; padding: 8px;">↺ Reset All Swaps</button>
+      <button onclick="closeSwapModal()" class="btn btn-outline" style="flex: 1; font-size: 11px; padding: 8px;">Cancel</button>
+    </div>
+  </div>
+</div>
+
 <!-- MODAL: GROCERY MASTER LIST -->
 <div id="modal-grocery" class="modal-overlay hidden">
   <div class="modal-box" style="max-height: 85vh; display: flex; flex-direction: column;">
@@ -816,6 +846,14 @@ function getDateForDay(targetDay) {
     formatted: `${dayOfMonth}, ${monthName} ${year} (W${weekNum})`,
     isToday: diff === 0
   };
+}
+
+function getDefaultDayMapping() {
+  return { 'Mon': 'Mon', 'Tue': 'Tue', 'Wed': 'Wed', 'Thu': 'Thu', 'Fri': 'Fri', 'Sat': 'Sat', 'Sun': 'Sun' };
+}
+
+function getMappedDay(day) {
+  return (appState.dayMapping && appState.dayMapping[day]) ? appState.dayMapping[day] : day;
 }
 
 /* ========================================================
@@ -1028,6 +1066,7 @@ var appState = {
   version: STORAGE_VERSION,
   mode: 'standard',
   lastWeekKey: '',
+  dayMapping: getDefaultDayMapping(),
   currentWeight: 84.9,
   weightLogs: [],
   sentiments: [],
@@ -1056,6 +1095,7 @@ function loadState() {
           if (parsed.sentiments) appState.sentiments = parsed.sentiments;
           if (parsed.groceryChecks) appState.groceryChecks = parsed.groceryChecks;
           if (parsed.lastWeekKey) appState.lastWeekKey = parsed.lastWeekKey;
+          if (parsed.dayMapping) appState.dayMapping = parsed.dayMapping;
         }
       }
     }
@@ -1066,6 +1106,7 @@ function loadState() {
   if (!appState.dailyTracking) appState.dailyTracking = {};
   if (!appState.customSets) appState.customSets = {};
   if (!appState.groceryChecks) appState.groceryChecks = {};
+  if (!appState.dayMapping) appState.dayMapping = getDefaultDayMapping();
   if (!Array.isArray(appState.weightLogs)) appState.weightLogs = [];
   if (!Array.isArray(appState.sentiments)) appState.sentiments = [];
   if (!appState.hyroxBenchmarks) appState.hyroxBenchmarks = {};
@@ -1086,9 +1127,9 @@ function persistState() {
 function checkWeeklyAutoReset() {
   var currentWeekKey = getCurrentWeekKey();
   if (appState.lastWeekKey && appState.lastWeekKey !== currentWeekKey) {
-    // Week rolled over to Monday: Clear daily checks and grocery checklist
     appState.dailyTracking = {};
     appState.groceryChecks = {};
+    appState.dayMapping = getDefaultDayMapping();
     appState.lastWeekKey = currentWeekKey;
     persistState();
   } else if (!appState.lastWeekKey) {
@@ -1154,16 +1195,105 @@ function selectDay(day) {
   var todayBadge = document.getElementById('today-indicator');
   if (todayBadge) todayBadge.style.display = dateInfo.isToday ? 'inline-block' : 'none';
 
-  var schedule = WORKOUT_SCHEDULE[day] || WORKOUT_SCHEDULE['Mon'];
+  var mappedDay = getMappedDay(day);
+  var schedule = WORKOUT_SCHEDULE[mappedDay] || WORKOUT_SCHEDULE['Mon'];
   var fuelBadge = document.getElementById('workout-fuel-badge');
   if (fuelBadge) {
     fuelBadge.innerText = schedule.fuelType;
     fuelBadge.className = `badge ${schedule.badgeType}`;
   }
 
+  // Update Swap Badges
+  var isSwapped = (mappedDay !== day);
+  var wSwapBadge = document.getElementById('workout-swap-badge');
+  var nSwapBadge = document.getElementById('nutrition-swap-badge');
+  if (wSwapBadge) {
+    if (isSwapped) {
+      wSwapBadge.innerText = `⇄ Swapped with ${mappedDay}`;
+      wSwapBadge.classList.remove('hidden');
+    } else {
+      wSwapBadge.classList.add('hidden');
+    }
+  }
+  if (nSwapBadge) {
+    if (isSwapped) {
+      nSwapBadge.innerText = `⇄ Swapped with ${mappedDay}`;
+      nSwapBadge.classList.remove('hidden');
+    } else {
+      nSwapBadge.classList.add('hidden');
+    }
+  }
+
   renderWorkoutTab(day);
   renderExtraExercises(day);
   renderNutritionTab(day);
+}
+
+/* ========================================================
+   DAY SWAP MODAL & LOGIC (PACKAGE DEAL)
+   ======================================================== */
+function openSwapModal() {
+  var nameEl = document.getElementById('swap-active-day-name');
+  if (nameEl) nameEl.innerText = activeDay;
+
+  var container = document.getElementById('swap-day-options');
+  if (!container) return;
+
+  var html = '';
+  for (var i = 0; i < DAYS.length; i++) {
+    var d = DAYS[i];
+    if (d === activeDay) continue;
+
+    var targetMapped = getMappedDay(d);
+    var sched = WORKOUT_SCHEDULE[targetMapped] || WORKOUT_SCHEDULE['Mon'];
+
+    html += `<div class="meal-item" style="padding: 10px 12px; margin-bottom: 6px;" onclick="executeDaySwap('${d}')">`;
+    html += '<div>';
+    html += '<div class="row" style="gap: 6px; justify-content: flex-start; margin-bottom: 2px;">';
+    html += `<strong style="font-size: 13px; color: var(--text-main);">${d}</strong>`;
+    html += `<span class="badge ${sched.badgeType}" style="font-size: 9px; padding: 2px 6px;">${sched.fuelType}</span>`;
+    html += '</div>';
+    html += `<div style="font-size: 11px; font-weight: 700; color: var(--text-muted);">${sched.title} • ${sched.focus}</div>`;
+    html += '</div>';
+    html += '<button class="btn btn-outline" style="padding: 4px 10px; font-size: 11px; border-radius: 8px;">Swap</button>';
+    html += '</div>';
+  }
+  container.innerHTML = html;
+
+  var modal = document.getElementById('modal-swap');
+  if (modal) modal.classList.remove('hidden');
+}
+
+function closeSwapModal() {
+  var modal = document.getElementById('modal-swap');
+  if (modal) modal.classList.add('hidden');
+}
+
+function executeDaySwap(targetDay) {
+  if (!DAYS.includes(targetDay) || targetDay === activeDay) return;
+
+  if (!appState.dayMapping) appState.dayMapping = getDefaultDayMapping();
+
+  var planA = appState.dayMapping[activeDay] || activeDay;
+  var planB = appState.dayMapping[targetDay] || targetDay;
+
+  appState.dayMapping[activeDay] = planB;
+  appState.dayMapping[targetDay] = planA;
+
+  persistState();
+  closeSwapModal();
+  selectDay(activeDay);
+  renderTrendsDashboard();
+}
+
+function resetDaySwaps() {
+  if (confirm("Reset all swapped days back to the standard weekly schedule?")) {
+    appState.dayMapping = getDefaultDayMapping();
+    persistState();
+    closeSwapModal();
+    selectDay(activeDay);
+    renderTrendsDashboard();
+  }
 }
 
 /* ========================================================
@@ -1247,7 +1377,8 @@ function switchTab(activeTabId) {
    WORKOUT ENGINE & CONFIRMATION
    ======================================================== */
 function isDayWorkoutComplete(day) {
-  var schedule = WORKOUT_SCHEDULE[day];
+  var mappedDay = getMappedDay(day);
+  var schedule = WORKOUT_SCHEDULE[mappedDay];
   if (!schedule || !schedule.exercises) return false;
   return schedule.exercises.every(function(ex) {
     return ex.sets.every(function(_, idx) {
@@ -1258,7 +1389,8 @@ function isDayWorkoutComplete(day) {
 }
 
 function renderWorkoutTab(day) {
-  var data = WORKOUT_SCHEDULE[day] || WORKOUT_SCHEDULE['Mon'];
+  var mappedDay = getMappedDay(day);
+  var data = WORKOUT_SCHEDULE[mappedDay] || WORKOUT_SCHEDULE['Mon'];
   var dayBadge = document.getElementById('workout-day-badge');
   var dayTitle = document.getElementById('workout-day-title');
   var dayFocus = document.getElementById('workout-day-focus');
@@ -1332,7 +1464,8 @@ function toggleSetDone(key) {
 }
 
 function toggleDayWorkout() {
-  var exercises = (WORKOUT_SCHEDULE[activeDay] || WORKOUT_SCHEDULE['Mon']).exercises;
+  var mappedDay = getMappedDay(activeDay);
+  var exercises = (WORKOUT_SCHEDULE[mappedDay] || WORKOUT_SCHEDULE['Mon']).exercises;
   var currentlyComplete = isDayWorkoutComplete(activeDay);
   var targetState = !currentlyComplete;
 
@@ -1448,7 +1581,8 @@ function renderExtraExercises(day) {
    NUTRITION ENGINE, SNACKS & OFF-PLAN FOOD
    ======================================================== */
 function isDayNutritionComplete(day) {
-  var meals = MEAL_SCHEDULE[day] || [];
+  var mappedDay = getMappedDay(day);
+  var meals = MEAL_SCHEDULE[mappedDay] || [];
   if (!meals.length) return false;
   return meals.every(function(_, idx) {
     var mealKey = `meal_${day}_${idx}`;
@@ -1457,7 +1591,8 @@ function isDayNutritionComplete(day) {
 }
 
 function updateNutritionTally(day) {
-  var meals = MEAL_SCHEDULE[day] || [];
+  var mappedDay = getMappedDay(day);
+  var meals = MEAL_SCHEDULE[mappedDay] || [];
   var totalCals = 0;
   var totalProtein = 0;
 
@@ -1470,7 +1605,7 @@ function updateNutritionTally(day) {
     }
   }
 
-  // Protein Shakes (Applied Nutrition ISO-XP: 130 kcal, 25g pro)
+  // Shakes (Applied Nutrition ISO-XP: 130 kcal, 25g pro)
   var shakesCount = (appState.dailyTracking && appState.dailyTracking[`shakes_${day}`]) || 0;
   totalCals += (shakesCount * 130);
   totalProtein += (shakesCount * 25);
@@ -1493,7 +1628,8 @@ function updateNutritionTally(day) {
 }
 
 function renderNutritionTab(day) {
-  var daySchedule = WORKOUT_SCHEDULE[day] || WORKOUT_SCHEDULE['Mon'];
+  var mappedDay = getMappedDay(day);
+  var daySchedule = WORKOUT_SCHEDULE[mappedDay] || WORKOUT_SCHEDULE['Mon'];
   var cardBadge = document.getElementById('nutrition-card-badge');
   if (cardBadge) {
     var carbLabel = '';
@@ -1512,7 +1648,6 @@ function renderNutritionTab(day) {
     markBtn.innerText = isComplete ? '↺ Undo Meals' : '✓ Mark Meals Done';
   }
 
-  // Water starts at 0.0L and shakes at 0/1 each day
   var currentWater = (appState.dailyTracking && appState.dailyTracking[`water_${day}`] !== undefined) ? appState.dailyTracking[`water_${day}`] : 0.0;
   var currentShakes = (appState.dailyTracking && appState.dailyTracking[`shakes_${day}`] !== undefined) ? appState.dailyTracking[`shakes_${day}`] : 0;
 
@@ -1521,8 +1656,8 @@ function renderNutritionTab(day) {
   if (waterDisp) waterDisp.innerText = `${currentWater.toFixed(1)}L`;
   if (shakesDisp) shakesDisp.innerText = `${currentShakes}/1`;
 
-  // Render Meals with Dynamic % Macro Badges (accounting for 1 planned shake)
-  var meals = MEAL_SCHEDULE[day] || [];
+  // Render Meals with Dynamic % Macro Badges
+  var meals = MEAL_SCHEDULE[mappedDay] || [];
   var mealContainer = document.getElementById('meal-list-container');
   if (mealContainer) {
     var dayTotalCals = meals.reduce(function(acc, m) { return acc + (m.cals || 0); }, 0) + 130;
@@ -1673,7 +1808,8 @@ function toggleMealDone(mealKey) {
 }
 
 function toggleDayNutrition() {
-  var meals = MEAL_SCHEDULE[activeDay] || [];
+  var mappedDay = getMappedDay(activeDay);
+  var meals = MEAL_SCHEDULE[mappedDay] || [];
   var currentlyComplete = isDayNutritionComplete(activeDay);
   var targetState = !currentlyComplete;
 
@@ -1829,6 +1965,20 @@ function calculate1RM(weight, reps) {
   return Math.round(w * (1 + (r / 30)) * 10) / 10;
 }
 
+function findLatestWorkingSet(exerciseId, defaultWeight, defaultReps) {
+  if (appState.customSets) {
+    for (var k in appState.customSets) {
+      if (k.indexOf(`_${exerciseId}_set_0`) !== -1 && appState.customSets[k]) {
+        var cs = appState.customSets[k];
+        if (cs.weight && cs.reps) {
+          return { weight: cs.weight, reps: cs.reps };
+        }
+      }
+    }
+  }
+  return { weight: defaultWeight, reps: defaultReps };
+}
+
 function renderTrendsDashboard() {
   var logs = appState.weightLogs || [];
   
@@ -1885,7 +2035,8 @@ function renderTrendsDashboard() {
   var daysCounted = 0;
   for (var dayIdx = 0; dayIdx < DAYS.length; dayIdx++) {
     var currentDay = DAYS[dayIdx];
-    var meals = MEAL_SCHEDULE[currentDay] || [];
+    var mappedDay = getMappedDay(currentDay);
+    var meals = MEAL_SCHEDULE[mappedDay] || [];
     var pLogged = 0;
     for (var mIdx = 0; mIdx < meals.length; mIdx++) {
       var mKey = `meal_${currentDay}_${mIdx}`;
@@ -1906,24 +2057,15 @@ function renderTrendsDashboard() {
     proInsightEl.innerText = daysCounted > 0 ? `${Math.round(totalProteinLogged / daysCounted)} g` : '185 g';
   }
 
-  // 3. Estimated 1RM Strength Profiler
+  // 3. Estimated 1RM Strength Profiler (Dynamically finds lifts across all days)
   var strengthSection = document.getElementById('trend-strength-section');
   if (strengthSection) {
     strengthSection.classList.remove('hidden');
 
-    var benchKey = 'Wed_w1_set_0';
-    var squatKey = 'Sun_su1_set_0';
-    var ohpKey = 'Wed_w3_set_0';
-    var rdlKey = 'Sun_su2_set_0';
-
-    var benchW = (appState.customSets && appState.customSets[benchKey] && appState.customSets[benchKey].weight) || '105';
-    var benchR = (appState.customSets && appState.customSets[benchKey] && appState.customSets[benchKey].reps) || '5';
-    var squatW = (appState.customSets && appState.customSets[squatKey] && appState.customSets[squatKey].weight) || '110';
-    var squatR = (appState.customSets && appState.customSets[squatKey] && appState.customSets[squatKey].reps) || '3';
-    var ohpW = (appState.customSets && appState.customSets[ohpKey] && appState.customSets[ohpKey].weight) || '62.5';
-    var ohpR = (appState.customSets && appState.customSets[ohpKey] && appState.customSets[ohpKey].reps) || '6';
-    var rdlW = (appState.customSets && appState.customSets[rdlKey] && appState.customSets[rdlKey].weight) || '120';
-    var rdlR = (appState.customSets && appState.customSets[rdlKey] && appState.customSets[rdlKey].reps) || '6';
+    var benchSet = findLatestWorkingSet('w1', '105', '5');
+    var squatSet = findLatestWorkingSet('su1', '110', '3');
+    var ohpSet = findLatestWorkingSet('w3', '62.5', '6');
+    var rdlSet = findLatestWorkingSet('su2', '120', '6');
 
     var bEl = document.getElementById('1rm-bench-val');
     var bSub = document.getElementById('1rm-bench-sub');
@@ -1934,14 +2076,14 @@ function renderTrendsDashboard() {
     var rEl = document.getElementById('1rm-rdl-val');
     var rSub = document.getElementById('1rm-rdl-sub');
 
-    if (bEl) bEl.innerText = `${calculate1RM(benchW, benchR)} kg`;
-    if (bSub) bSub.innerText = `Working: ${benchW}kg × ${benchR}`;
-    if (sEl) sEl.innerText = `${calculate1RM(squatW, squatR)} kg`;
-    if (sSub) sSub.innerText = `Working: ${squatW}kg × ${squatR}`;
-    if (oEl) oEl.innerText = `${calculate1RM(ohpW, ohpR)} kg`;
-    if (oSub) oSub.innerText = `Working: ${ohpW}kg × ${ohpR}`;
-    if (rEl) rEl.innerText = `${calculate1RM(rdlW, rdlR)} kg`;
-    if (rSub) rSub.innerText = `Working: ${rdlW}kg × ${rdlR}`;
+    if (bEl) bEl.innerText = `${calculate1RM(benchSet.weight, benchSet.reps)} kg`;
+    if (bSub) bSub.innerText = `Working: ${benchSet.weight}kg × ${benchSet.reps}`;
+    if (sEl) sEl.innerText = `${calculate1RM(squatSet.weight, squatSet.reps)} kg`;
+    if (sSub) sSub.innerText = `Working: ${squatSet.weight}kg × ${squatSet.reps}`;
+    if (oEl) oEl.innerText = `${calculate1RM(ohpSet.weight, ohpSet.reps)} kg`;
+    if (oSub) oSub.innerText = `Working: ${ohpSet.weight}kg × ${ohpSet.reps}`;
+    if (rEl) rEl.innerText = `${calculate1RM(rdlSet.weight, rdlSet.reps)} kg`;
+    if (rSub) rSub.innerText = `Working: ${rdlSet.weight}kg × ${rdlSet.reps}`;
   }
 
   // 4. Hyrox Station Telemetry
@@ -2505,6 +2647,7 @@ function resetCurrentWeek() {
   if (confirm("Reset current week's workout and nutrition checks? Your custom weight logs and set numbers will remain preserved.")) {
     appState.dailyTracking = {};
     appState.groceryChecks = {};
+    appState.dayMapping = getDefaultDayMapping();
     persistState();
     selectDay(activeDay);
     alert('Week reset successfully!');
