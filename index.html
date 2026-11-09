@@ -94,7 +94,7 @@ main { flex: 1; max-width: 600px; width: 100%; margin: 0 auto; padding: 14px 12p
 .btn-danger { background: #EF4444; color: white; border: none; }
 
 input, textarea, select { width: 100%; background: #F8FAFC; border: 1px solid var(--border-color); border-radius: 10px; padding: 10px 12px; font-size: 13px; font-weight: 600; color: var(--text-main); outline: none; }
-input:focus, textarea:focus { border-color: var(--accent); background: #FFFFFF; }
+input:focus, textarea:focus, select:focus { border-color: var(--accent); background: #FFFFFF; }
 
 /* Exercise Card Styles */
 .exercise-card {
@@ -227,7 +227,7 @@ nav.bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; background: rgba
         </div>
       </div>
       <button onclick="openWeightModal()" class="btn btn-outline" style="padding: 6px 10px; font-size: 12px; border-radius: 10px; flex-shrink: 0;">
-        ⚖️ <span id="header-weight-text">84.9 kg</span>
+        ⚖️ <span id="header-weight-text">-- kg</span>
       </button>
     </div>
 
@@ -316,7 +316,7 @@ nav.bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; background: rgba
       </div>
     </div>
 
-    <!-- EXTRA / OFF-PROGRAM EXERCISES (Active in both Standard & Hyrox) -->
+    <!-- EXTRA / OFF-PROGRAM EXERCISES -->
     <div class="card" style="margin-top: 12px;">
       <div class="row" style="margin-bottom: 8px;">
         <div>
@@ -353,9 +353,11 @@ nav.bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; background: rgba
           <h2 style="font-size: 17px; font-weight: 800; margin-top: 2px;">Targeted Fueling Schedule</h2>
           <p style="font-size: 11px; color: var(--text-muted);">Prioritize clean starches around training</p>
         </div>
-        <button id="btn-toggle-day-nutrition" onclick="toggleDayNutrition()" class="btn btn-outline" style="font-size: 11px; padding: 6px 10px;">
-          ✓ Mark Meals Done
-        </button>
+        <div class="flex-gap">
+          <button id="btn-toggle-day-nutrition" onclick="toggleDayNutrition()" class="btn btn-outline" style="font-size: 11px; padding: 6px 10px;">
+            ✓ Mark Meals Done
+          </button>
+        </div>
       </div>
 
       <!-- Scoped Daily Quick Trackers -->
@@ -385,7 +387,10 @@ nav.bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; background: rgba
         </div>
       </div>
 
-      <h3 style="font-size: 12px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-muted); margin-bottom: 8px;">Today's Meals & Nutrition</h3>
+      <div class="row" style="margin-bottom: 8px;">
+        <h3 style="font-size: 12px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-muted);">Today's Meals & Nutrition</h3>
+        <span style="font-size: 10px; color: var(--text-muted);">Tap <strong>⇄</strong> on any meal to swap days</span>
+      </div>
       <div id="meal-list-container"></div>
 
       <!-- SNACKS SECTION -->
@@ -534,7 +539,7 @@ nav.bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; background: rgba
       <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; margin-bottom: 14px;">
         <div style="background: #F8FAFC; border: 1px solid var(--border-color); border-radius: 10px; padding: 8px 4px; text-align: center;">
           <div style="font-size: 9px; font-weight: 700; color: var(--text-muted); text-transform: uppercase;">Current</div>
-          <div id="trend-tile-latest" style="font-size: 13px; font-weight: 800; color: var(--text-main); font-family: 'JetBrains Mono', monospace; margin-top: 2px;">84.9kg</div>
+          <div id="trend-tile-latest" style="font-size: 13px; font-weight: 800; color: var(--text-main); font-family: 'JetBrains Mono', monospace; margin-top: 2px;">-- kg</div>
         </div>
         <div style="background: #F8FAFC; border: 1px solid var(--border-color); border-radius: 10px; padding: 8px 4px; text-align: center;">
           <div style="font-size: 9px; font-weight: 700; color: var(--text-muted); text-transform: uppercase;">7D Avg</div>
@@ -650,9 +655,9 @@ nav.bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; background: rgba
         </button>
       </div>
 
-      <!-- Scrollable History Table -->
+      <!-- Scrollable History Table with Edit & Delete Controls -->
       <h3 style="font-size: 12px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-muted); margin-bottom: 8px;">Check-in History</h3>
-      <div style="max-height: 180px; overflow-y: auto; border: 1px solid var(--border-color); border-radius: 12px; padding: 8px 12px; background: white;" id="trends-history-list"></div>
+      <div style="max-height: 200px; overflow-y: auto; border: 1px solid var(--border-color); border-radius: 12px; padding: 8px 12px; background: white;" id="trends-history-list"></div>
     </div>
   </section>
 
@@ -660,13 +665,19 @@ nav.bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; background: rgba
   <section id="tab-settings" class="hidden">
     <div class="card">
       <h2 style="font-size: 17px; font-weight: 800; margin-bottom: 4px;">Settings & Cycles</h2>
-      <p style="font-size: 11px; color: var(--text-muted); margin-bottom: 16px;">Manage weekly resets and offline JSON storage</p>
+      <p style="font-size: 11px; color: var(--text-muted); margin-bottom: 16px;">Manage weekly resets, schedules, and offline JSON storage</p>
 
       <div style="display: flex; flex-direction: column; gap: 12px;">
         <div style="padding: 12px; background: #FEF2F2; border-radius: 12px; border: 1px solid #FEE2E2;">
           <h3 style="font-size: 13px; font-weight: 800; color: #991B1B; margin-bottom: 2px;">Weekly Reset</h3>
-          <p style="font-size: 11px; color: #7F1D1D; margin-bottom: 10px;">Clear all checks and day swaps for the new week without losing custom lift weights.</p>
+          <p style="font-size: 11px; color: #7F1D1D; margin-bottom: 10px;">Clear all checks, meal adjustments, and day swaps for the new week without losing custom lift weights.</p>
           <button onclick="resetCurrentWeek()" class="btn btn-danger" style="width: 100%; font-size: 12px;">🔄 Reset Current Week</button>
+        </div>
+
+        <div style="padding: 12px; background: #F8FAFC; border-radius: 12px; border: 1px solid var(--border-color);">
+          <h3 style="font-size: 13px; font-weight: 800; margin-bottom: 2px;">Reset Nutrition Plan</h3>
+          <p style="font-size: 11px; color: var(--text-muted); margin-bottom: 8px;">Revert all meal swaps back to default protocol.</p>
+          <button onclick="resetMealScheduleToDefault()" class="btn btn-outline" style="width: 100%; font-size: 12px;">↺ Reset Meals to Original Plan</button>
         </div>
 
         <div style="padding: 12px; background: #F8FAFC; border-radius: 12px; border: 1px solid var(--border-color);">
@@ -731,7 +742,7 @@ nav.bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; background: rgba
     <div style="display: grid; grid-template-columns: 1fr 1.5fr; gap: 8px; margin-bottom: 12px;">
       <div>
         <label style="font-size: 11px; font-weight: 700; color: var(--text-muted); display: block; margin-bottom: 4px;">Weight (kg)</label>
-        <input type="number" id="input-weight-val" step="0.1" value="84.9" style="font-size: 14px; font-weight: 700;">
+        <input type="number" id="input-weight-val" step="0.1" placeholder="e.g. 84.5" style="font-size: 14px; font-weight: 700;">
       </div>
       <div>
         <label style="font-size: 11px; font-weight: 700; color: var(--text-muted); display: block; margin-bottom: 4px;">Condition Note</label>
@@ -742,6 +753,35 @@ nav.bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; background: rgba
     <div class="row" style="gap: 8px;">
       <button onclick="closeWeightModal()" class="btn btn-outline" style="flex: 1;">Cancel</button>
       <button onclick="saveWeightLog()" class="btn" style="flex: 1;">Save Log</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL: EDIT WEIGHT CHECK-IN -->
+<div id="modal-weight-edit" class="modal-overlay hidden">
+  <div class="modal-box">
+    <div class="row" style="margin-bottom: 12px;">
+      <div>
+        <h3 style="font-size: 16px; font-weight: 800;">Edit Weight Entry</h3>
+        <p id="edit-weight-date-label" style="font-size: 10px; color: var(--text-muted);">Updating logged check-in</p>
+      </div>
+      <button onclick="closeEditWeightModal()" style="background: none; border: none; font-size: 18px; cursor: pointer; color: var(--text-muted);">✕</button>
+    </div>
+
+    <div style="display: grid; grid-template-columns: 1fr 1.5fr; gap: 8px; margin-bottom: 12px;">
+      <div>
+        <label style="font-size: 11px; font-weight: 700; color: var(--text-muted); display: block; margin-bottom: 4px;">Weight (kg)</label>
+        <input type="number" id="input-edit-weight-val" step="0.1" style="font-size: 14px; font-weight: 700;">
+      </div>
+      <div>
+        <label style="font-size: 11px; font-weight: 700; color: var(--text-muted); display: block; margin-bottom: 4px;">Condition Note</label>
+        <input type="text" id="input-edit-weight-notes" placeholder="e.g. Morning fast" style="font-size: 12px;">
+      </div>
+    </div>
+    
+    <div class="row" style="gap: 8px;">
+      <button onclick="closeEditWeightModal()" class="btn btn-outline" style="flex: 1;">Cancel</button>
+      <button onclick="saveEditedWeightLog()" class="btn" style="flex: 1;">Update Entry</button>
     </div>
   </div>
 </div>
@@ -764,10 +804,10 @@ nav.bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; background: rgba
   </div>
 </div>
 
-<!-- MODAL: SWAP DAY (PACKAGE DEAL) -->
+<!-- MODAL: SWAP DAY (WITH MINI DROPDOWN & FUTURE CALENDAR DATES) -->
 <div id="modal-swap" class="modal-overlay hidden">
   <div class="modal-box">
-    <div class="row" style="margin-bottom: 10px;">
+    <div class="row" style="margin-bottom: 12px;">
       <div>
         <h3 style="font-size: 16px; font-weight: 800;">⇄ Swap Day Routine</h3>
         <p style="font-size: 11px; color: var(--text-muted);">Package deal: Swaps workout & nutrition together</p>
@@ -775,15 +815,64 @@ nav.bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; background: rgba
       <button onclick="closeSwapModal()" style="background: none; border: none; font-size: 18px; cursor: pointer; color: var(--text-muted);">✕</button>
     </div>
 
-    <p style="font-size: 12px; font-weight: 700; color: var(--text-main); margin-bottom: 10px;">
-      Swap <span id="swap-active-day-name" style="color: var(--accent); font-weight: 800;">Monday</span> with:
-    </p>
+    <div style="background: #F8FAFC; border: 1px solid var(--border-color); border-radius: 12px; padding: 12px; margin-bottom: 12px;">
+      <label style="font-size: 11px; font-weight: 700; color: var(--text-muted); display: block; margin-bottom: 6px;">Active Day Being Swapped:</label>
+      <div id="swap-active-day-label" style="font-size: 14px; font-weight: 800; color: var(--accent);">Monday</div>
+    </div>
 
-    <div id="swap-day-options" style="display: flex; flex-direction: column; gap: 6px; max-height: 280px; overflow-y: auto; margin-bottom: 14px;"></div>
+    <div style="margin-bottom: 14px;">
+      <label style="font-size: 11px; font-weight: 700; color: var(--text-muted); display: block; margin-bottom: 6px;">Select Upcoming Day to Swap With:</label>
+      <!-- Mini Dropdown Menu with Future Dates -->
+      <select id="swap-future-day-select" onchange="updateSwapPreview(this.value)" style="font-size: 12px; font-weight: 700; padding: 10px 12px;">
+      </select>
+    </div>
+
+    <!-- Live Preview Box -->
+    <div id="swap-preview-box" style="background: #EFF6FF; border: 1px solid #BFDBFE; border-radius: 12px; padding: 12px; margin-bottom: 16px; font-size: 11px; line-height: 1.5; color: #1E40AF;">
+    </div>
 
     <div class="row" style="gap: 8px;">
-      <button onclick="resetDaySwaps()" class="btn btn-outline" style="flex: 1; font-size: 11px; padding: 8px;">↺ Reset All Swaps</button>
-      <button onclick="closeSwapModal()" class="btn btn-outline" style="flex: 1; font-size: 11px; padding: 8px;">Cancel</button>
+      <button onclick="confirmDaySwapFromSelect()" class="btn" style="flex: 2; font-size: 12px;">Confirm Day Swap</button>
+      <button onclick="resetDaySwaps()" class="btn btn-outline" style="flex: 1; font-size: 11px;">↺ Reset All</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL: SWAP MEAL BETWEEN DAYS -->
+<div id="modal-meal-swap" class="modal-overlay hidden">
+  <div class="modal-box">
+    <div class="row" style="margin-bottom: 12px;">
+      <div>
+        <h3 style="font-size: 16px; font-weight: 800;">⇄ Swap Meal Between Days</h3>
+        <p style="font-size: 11px; color: var(--text-muted);">Exchange meal items between two days</p>
+      </div>
+      <button onclick="closeMealSwapModal()" style="background: none; border: none; font-size: 18px; cursor: pointer; color: var(--text-muted);">✕</button>
+    </div>
+
+    <!-- Source Meal Card -->
+    <div style="background: #F8FAFC; border: 1px solid var(--border-color); border-radius: 12px; padding: 12px; margin-bottom: 12px;">
+      <span class="badge badge-blue" style="margin-bottom: 4px;">Source Meal</span>
+      <div id="meal-swap-source-title" style="font-size: 13px; font-weight: 800; color: var(--text-main); margin-top: 2px;">Meal</div>
+      <div id="meal-swap-source-sub" style="font-size: 11px; font-weight: 700; color: var(--text-muted); font-family: 'JetBrains Mono', monospace; margin-top: 2px;">-- kcal • --g pro</div>
+    </div>
+
+    <!-- Target Day Selector -->
+    <div style="margin-bottom: 10px;">
+      <label style="font-size: 11px; font-weight: 700; color: var(--text-muted); display: block; margin-bottom: 4px;">Swap with Day:</label>
+      <select id="meal-swap-target-day-select" onchange="onMealSwapTargetDayChanged(this.value)" style="font-size: 12px; font-weight: 700;">
+      </select>
+    </div>
+
+    <!-- Target Meal Selector -->
+    <div style="margin-bottom: 16px;">
+      <label style="font-size: 11px; font-weight: 700; color: var(--text-muted); display: block; margin-bottom: 4px;">Swap with Meal on That Day:</label>
+      <select id="meal-swap-target-meal-select" style="font-size: 12px; font-weight: 700;">
+      </select>
+    </div>
+
+    <div class="row" style="gap: 8px;">
+      <button onclick="executeMealSwap()" class="btn btn-emerald" style="flex: 2; font-size: 12px;">⇄ Confirm Meal Swap</button>
+      <button onclick="closeMealSwapModal()" class="btn btn-outline" style="flex: 1; font-size: 12px;">Cancel</button>
     </div>
   </div>
 </div>
@@ -826,6 +915,12 @@ function getCurrentWeekKey() {
   return `${now.getFullYear()}_W${getISOWeekNumber(now)}`;
 }
 
+function getOrdinalSuffix(n) {
+  var s = ["th", "st", "nd", "rd"];
+  var v = n % 100;
+  return n + (s[(v - 20) % 10] || s[v] || s[0]);
+}
+
 function getDateForDay(targetDay) {
   var now = new Date();
   var currentJsDay = now.getDay(); 
@@ -845,6 +940,31 @@ function getDateForDay(targetDay) {
   return {
     formatted: `${dayOfMonth}, ${monthName} ${year} (W${weekNum})`,
     isToday: diff === 0
+  };
+}
+
+function getUpcomingDateForDay(fromDay, targetDay) {
+  var fromIdx = DAY_INDEX_MAP[fromDay] !== undefined ? DAY_INDEX_MAP[fromDay] : 0;
+  var targetIdx = DAY_INDEX_MAP[targetDay] !== undefined ? DAY_INDEX_MAP[targetDay] : 0;
+  
+  var daysAhead = (targetIdx - fromIdx + 7) % 7;
+  if (daysAhead === 0) daysAhead = 7;
+
+  var now = new Date();
+  var currentJsDay = now.getDay();
+  var curIdx = currentJsDay === 0 ? 6 : currentJsDay - 1;
+  var diffFromToday = fromIdx - curIdx;
+
+  var targetDate = new Date(now);
+  targetDate.setDate(now.getDate() + diffFromToday + daysAhead);
+
+  var dayNames = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+  var monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+  
+  return {
+    dayName: dayNames[targetDate.getDay()],
+    formatted: `${dayNames[targetDate.getDay()]}, ${getOrdinalSuffix(targetDate.getDate())} ${monthNames[targetDate.getMonth()]}`,
+    daysAhead: daysAhead
   };
 }
 
@@ -954,9 +1074,9 @@ var WORKOUT_SCHEDULE = {
 };
 
 /* ========================================================
-   CALIBRATED NUTRITION SCHEDULE
+   CALIBRATED NUTRITION SCHEDULE (DEFAULT PROTOCOL)
    ======================================================== */
-var MEAL_SCHEDULE = {
+var DEFAULT_MEAL_SCHEDULE = {
   'Mon': [
     { time: '07:00', name: 'Pre-Run Hydration & Electrolytes', note: '500ml Water + Bulk Electrolytes (Fasted)', cals: 0, protein: 0 },
     { time: '11:30', name: '4 Eggs, 2 Sausages & 3x Sourdough', note: 'Lidl Large Eggs, Chicken Sausages & Jordans Sourdough (+Honey) • Cook in 1 Cal Spray', cals: 760, protein: 56 },
@@ -1064,12 +1184,15 @@ var GROCERY_CATEGORIES = [
    APPLICATION STATE & PERSISTENCE
    ======================================================== */
 var activeDay = 'Mon';
+var selectedSwapMeal = null;
+var editWeightLogIndex = null;
 var appState = {
   version: STORAGE_VERSION,
   mode: 'standard',
   lastWeekKey: '',
   dayMapping: getDefaultDayMapping(),
-  currentWeight: 84.9,
+  mealSchedule: JSON.parse(JSON.stringify(DEFAULT_MEAL_SCHEDULE)),
+  currentWeight: null,
   weightLogs: [],
   sentiments: [],
   fatigueData: { sleepHrs: 7.5, rhr: 52, soreness: 4 },
@@ -1090,7 +1213,7 @@ function loadState() {
         } else {
           if (parsed.customSets) appState.customSets = parsed.customSets;
           if (parsed.hyroxBenchmarks) appState.hyroxBenchmarks = parsed.hyroxBenchmarks;
-          if (parsed.currentWeight) appState.currentWeight = parsed.currentWeight;
+          if (parsed.currentWeight !== undefined) appState.currentWeight = parsed.currentWeight;
           if (parsed.weightLogs) appState.weightLogs = parsed.weightLogs;
           if (parsed.dailyTracking) appState.dailyTracking = parsed.dailyTracking;
           if (parsed.fatigueData) appState.fatigueData = parsed.fatigueData;
@@ -1098,6 +1221,7 @@ function loadState() {
           if (parsed.groceryChecks) appState.groceryChecks = parsed.groceryChecks;
           if (parsed.lastWeekKey) appState.lastWeekKey = parsed.lastWeekKey;
           if (parsed.dayMapping) appState.dayMapping = parsed.dayMapping;
+          if (parsed.mealSchedule) appState.mealSchedule = parsed.mealSchedule;
         }
       }
     }
@@ -1109,9 +1233,16 @@ function loadState() {
   if (!appState.customSets) appState.customSets = {};
   if (!appState.groceryChecks) appState.groceryChecks = {};
   if (!appState.dayMapping) appState.dayMapping = getDefaultDayMapping();
+  if (!appState.mealSchedule) appState.mealSchedule = JSON.parse(JSON.stringify(DEFAULT_MEAL_SCHEDULE));
   if (!Array.isArray(appState.weightLogs)) appState.weightLogs = [];
   if (!Array.isArray(appState.sentiments)) appState.sentiments = [];
   if (!appState.hyroxBenchmarks) appState.hyroxBenchmarks = {};
+
+  // Clean legacy single-placeholder if user had no real logs
+  if (appState.weightLogs.length === 1 && appState.weightLogs[0].notes === 'Morning fast' && appState.weightLogs[0].weight === 84.9) {
+    appState.weightLogs = [];
+    appState.currentWeight = null;
+  }
 }
 
 function persistState() {
@@ -1133,6 +1264,7 @@ function checkWeeklyAutoReset() {
       appState.dailyTracking = {};
       appState.groceryChecks = {};
       appState.dayMapping = getDefaultDayMapping();
+      appState.mealSchedule = JSON.parse(JSON.stringify(DEFAULT_MEAL_SCHEDULE));
       appState.lastWeekKey = currentWeekKey;
       persistState();
     } else if (!appState.lastWeekKey) {
@@ -1240,35 +1372,37 @@ function selectDay(day) {
 }
 
 /* ========================================================
-   DAY SWAP MODAL & LOGIC (PACKAGE DEAL)
+   DAY SWAP MODAL & DROPDOWN (WITH FUTURE DATES)
    ======================================================== */
 function openSwapModal() {
-  var nameEl = document.getElementById('swap-active-day-name');
-  if (nameEl) nameEl.innerText = activeDay;
+  var activeLabel = document.getElementById('swap-active-day-label');
+  var mappedDay = getMappedDay(activeDay);
+  var currentSched = WORKOUT_SCHEDULE[mappedDay] || WORKOUT_SCHEDULE['Mon'];
+  
+  if (activeLabel) {
+    activeLabel.innerHTML = `${activeDay} <span style="font-size: 11px; font-weight: 600; color: var(--text-muted);">(${currentSched.title})</span>`;
+  }
 
-  var container = document.getElementById('swap-day-options');
-  if (!container) return;
+  var selectEl = document.getElementById('swap-future-day-select');
+  if (!selectEl) return;
 
-  var html = '';
+  var optionsHtml = '';
+  var firstTarget = '';
   for (var i = 0; i < DAYS.length; i++) {
     var d = DAYS[i];
     if (d === activeDay) continue;
 
+    if (!firstTarget) firstTarget = d;
+
+    var futureInfo = getUpcomingDateForDay(activeDay, d);
     var targetMapped = getMappedDay(d);
     var sched = WORKOUT_SCHEDULE[targetMapped] || WORKOUT_SCHEDULE['Mon'];
 
-    html += `<div class="meal-item" style="padding: 10px 12px; margin-bottom: 6px;" onclick="executeDaySwap('${d}')">`;
-    html += '<div>';
-    html += '<div class="row" style="gap: 6px; justify-content: flex-start; margin-bottom: 2px;">';
-    html += `<strong style="font-size: 13px; color: var(--text-main);">${d}</strong>`;
-    html += `<span class="badge ${sched.badgeType}" style="font-size: 9px; padding: 2px 6px;">${sched.fuelType}</span>`;
-    html += '</div>';
-    html += `<div style="font-size: 11px; font-weight: 700; color: var(--text-muted);">${sched.title} • ${sched.focus}</div>`;
-    html += '</div>';
-    html += '<button class="btn btn-outline" style="padding: 4px 10px; font-size: 11px; border-radius: 8px;">Swap</button>';
-    html += '</div>';
+    optionsHtml += `<option value="${d}">${futureInfo.formatted} — ${sched.title} (${sched.fuelType})</option>`;
   }
-  container.innerHTML = html;
+  selectEl.innerHTML = optionsHtml;
+
+  updateSwapPreview(firstTarget);
 
   var modal = document.getElementById('modal-swap');
   if (modal) modal.classList.remove('hidden');
@@ -1279,6 +1413,30 @@ function closeSwapModal() {
   if (modal) modal.classList.add('hidden');
 }
 
+function updateSwapPreview(targetDay) {
+  var previewBox = document.getElementById('swap-preview-box');
+  if (!previewBox || !targetDay) return;
+
+  var futureInfo = getUpcomingDateForDay(activeDay, targetDay);
+  var activePlan = getMappedDay(activeDay);
+  var targetPlan = getMappedDay(targetDay);
+
+  var activeSched = WORKOUT_SCHEDULE[activePlan] || WORKOUT_SCHEDULE['Mon'];
+  var targetSched = WORKOUT_SCHEDULE[targetPlan] || WORKOUT_SCHEDULE['Mon'];
+
+  previewBox.innerHTML = `
+    <div><strong>${activeDay} (This Week)</strong> will now run: <span style="font-weight: 800; color: #1D4ED8;">${targetSched.title} (${targetSched.fuelType})</span></div>
+    <div style="margin-top: 4px;"><strong>${futureInfo.formatted}</strong> will run: <span style="font-weight: 800; color: #1D4ED8;">${activeSched.title} (${activeSched.fuelType})</span></div>
+  `;
+}
+
+function confirmDaySwapFromSelect() {
+  var selectEl = document.getElementById('swap-future-day-select');
+  if (selectEl && selectEl.value) {
+    executeDaySwap(selectEl.value);
+  }
+}
+
 function executeDaySwap(targetDay) {
   if (!DAYS.includes(targetDay) || targetDay === activeDay) return;
 
@@ -1287,6 +1445,7 @@ function executeDaySwap(targetDay) {
   var planA = appState.dayMapping[activeDay] || activeDay;
   var planB = appState.dayMapping[targetDay] || targetDay;
 
+  // Package deal swap: Exchanges mapped workout & nutrition routine
   appState.dayMapping[activeDay] = planB;
   appState.dayMapping[targetDay] = planA;
 
@@ -1303,6 +1462,126 @@ function resetDaySwaps() {
     closeSwapModal();
     selectDay(activeDay);
     renderTrendsDashboard();
+  }
+}
+
+/* ========================================================
+   MEAL SWAP MODAL & LOGIC (BETWEEN DAYS)
+   ======================================================== */
+function getActiveMealsForDay(day) {
+  var mappedDay = getMappedDay(day);
+  var sched = (appState.mealSchedule && appState.mealSchedule[mappedDay]) ? appState.mealSchedule[mappedDay] : (DEFAULT_MEAL_SCHEDULE[mappedDay] || []);
+  return sched;
+}
+
+function openMealSwapModal(day, mealIndex) {
+  var meals = getActiveMealsForDay(day);
+  var source = meals[mealIndex];
+  if (!source) return;
+
+  selectedSwapMeal = { day: day, index: mealIndex, data: Object.assign({}, source) };
+
+  var titleEl = document.getElementById('meal-swap-source-title');
+  var subEl = document.getElementById('meal-swap-source-sub');
+  if (titleEl) titleEl.innerText = `${day} (${source.time}) — ${source.name}`;
+  if (subEl) subEl.innerText = `${source.cals} kcal • ${source.protein}g protein (${source.note})`;
+
+  var daySelect = document.getElementById('meal-swap-target-day-select');
+  if (daySelect) {
+    var dayOptions = '';
+    var firstTargetDay = '';
+    for (var i = 0; i < DAYS.length; i++) {
+      var d = DAYS[i];
+      if (d === day) continue;
+      if (!firstTargetDay) firstTargetDay = d;
+      var fDate = getUpcomingDateForDay(day, d);
+      dayOptions += `<option value="${d}">${fDate.formatted}</option>`;
+    }
+    daySelect.innerHTML = dayOptions;
+    onMealSwapTargetDayChanged(firstTargetDay);
+  }
+
+  var modal = document.getElementById('modal-meal-swap');
+  if (modal) modal.classList.remove('hidden');
+}
+
+function closeMealSwapModal() {
+  selectedSwapMeal = null;
+  var modal = document.getElementById('modal-meal-swap');
+  if (modal) modal.classList.add('hidden');
+}
+
+function onMealSwapTargetDayChanged(targetDay) {
+  var mealSelect = document.getElementById('meal-swap-target-meal-select');
+  if (!mealSelect || !targetDay) return;
+
+  var targetMeals = getActiveMealsForDay(targetDay);
+  var html = '';
+  for (var i = 0; i < targetMeals.length; i++) {
+    var m = targetMeals[i];
+    html += `<option value="${i}">${m.time} — ${m.name} (${m.cals} kcal • ${m.protein}g pro)</option>`;
+  }
+  mealSelect.innerHTML = html;
+}
+
+function executeMealSwap() {
+  if (!selectedSwapMeal) return;
+
+  var daySelect = document.getElementById('meal-swap-target-day-select');
+  var mealSelect = document.getElementById('meal-swap-target-meal-select');
+  if (!daySelect || !mealSelect) return;
+
+  var targetDay = daySelect.value;
+  var targetMealIndex = parseInt(mealSelect.value, 10);
+
+  var sourceMappedDay = getMappedDay(selectedSwapMeal.day);
+  var targetMappedDay = getMappedDay(targetDay);
+
+  if (!appState.mealSchedule) {
+    appState.mealSchedule = JSON.parse(JSON.stringify(DEFAULT_MEAL_SCHEDULE));
+  }
+
+  var sourceList = appState.mealSchedule[sourceMappedDay];
+  var targetList = appState.mealSchedule[targetMappedDay];
+
+  if (!sourceList || !targetList || !sourceList[selectedSwapMeal.index] || !targetList[targetMealIndex]) {
+    alert('Unable to swap selected meals.');
+    return;
+  }
+
+  var mealA = sourceList[selectedSwapMeal.index];
+  var mealB = targetList[targetMealIndex];
+
+  var temp = {
+    name: mealA.name,
+    note: mealA.note,
+    cals: mealA.cals,
+    protein: mealA.protein
+  };
+
+  mealA.name = mealB.name;
+  mealA.note = mealB.note;
+  mealA.cals = mealB.cals;
+  mealA.protein = mealB.protein;
+
+  mealB.name = temp.name;
+  mealB.note = temp.note;
+  mealB.cals = temp.cals;
+  mealB.protein = temp.protein;
+
+  persistState();
+  closeMealSwapModal();
+  renderNutritionTab(activeDay);
+  renderTrendsDashboard();
+}
+
+function resetMealScheduleToDefault() {
+  if (confirm("Reset all meals back to the original calibrated plan?")) {
+    appState.mealSchedule = JSON.parse(JSON.stringify(DEFAULT_MEAL_SCHEDULE));
+    persistState();
+    renderNutritionTab(activeDay);
+    renderTrendsDashboard();
+    alert("Meals restored to default protocol!");
   }
 }
 
@@ -1600,8 +1879,7 @@ function renderExtraExercises(day) {
    NUTRITION ENGINE, SNACKS & OFF-PLAN FOOD
    ======================================================== */
 function isDayNutritionComplete(day) {
-  var mappedDay = getMappedDay(day);
-  var meals = MEAL_SCHEDULE[mappedDay] || [];
+  var meals = getActiveMealsForDay(day);
   if (!meals.length) return false;
   return meals.every(function(_, idx) {
     var mealKey = `meal_${day}_${idx}`;
@@ -1610,8 +1888,7 @@ function isDayNutritionComplete(day) {
 }
 
 function updateNutritionTally(day) {
-  var mappedDay = getMappedDay(day);
-  var meals = MEAL_SCHEDULE[mappedDay] || [];
+  var meals = getActiveMealsForDay(day);
   var totalCals = 0;
   var totalProtein = 0;
 
@@ -1675,8 +1952,8 @@ function renderNutritionTab(day) {
   if (waterDisp) waterDisp.innerText = `${currentWater.toFixed(1)}L`;
   if (shakesDisp) shakesDisp.innerText = `${currentShakes}/1`;
 
-  // Render Meals with Dynamic % Macro Badges
-  var meals = MEAL_SCHEDULE[mappedDay] || [];
+  // Render Meals with Dynamic % Macro Badges and Quick Meal Swap Trigger
+  var meals = getActiveMealsForDay(day);
   var mealContainer = document.getElementById('meal-list-container');
   if (mealContainer) {
     var dayTotalCals = meals.reduce(function(acc, m) { return acc + (m.cals || 0); }, 0) + 130;
@@ -1693,7 +1970,7 @@ function renderNutritionTab(day) {
       var pctMeta = (m.cals > 0 || m.protein > 0) ? ` (${calsPct}% Daily Kcal • ${proPct}% Daily Pro)` : '';
 
       mealHtml += `<div class="meal-item ${isChecked ? 'checked' : ''}" onclick="toggleMealDone('${mealKey}')">`;
-      mealHtml += '<div>';
+      mealHtml += '<div style="flex: 1; min-width: 0;">';
       mealHtml += '<div class="row" style="gap: 6px; justify-content: flex-start; margin-bottom: 2px;">';
       mealHtml += `<span style="font-size: 11px; font-weight: 800; background: #EEF2F6; padding: 2px 6px; border-radius: 4px; color: var(--text-main);">${m.time}</span>`;
       mealHtml += `<span style="font-size: 10px; font-weight: 700; color: var(--text-muted); font-family: 'JetBrains Mono', monospace;">${m.cals} kcal • ${m.protein}g pro${pctMeta}</span>`;
@@ -1701,7 +1978,12 @@ function renderNutritionTab(day) {
       mealHtml += `<div class="meal-desc" style="font-size: 13px; font-weight: 700; margin-top: 4px;">${m.name}</div>`;
       mealHtml += `<div style="font-size: 11px; color: var(--text-muted); margin-top: 2px;">${m.note}</div>`;
       mealHtml += '</div>';
+      
+      mealHtml += '<div class="flex-gap" style="gap: 6px; flex-shrink: 0; margin-left: 6px;">';
+      mealHtml += `<button onclick="event.stopPropagation(); openMealSwapModal('${day}', ${i})" class="btn btn-outline" style="width: 28px; height: 28px; padding: 0; font-size: 13px; border-radius: 8px;" title="Swap this meal with another day">⇄</button>`;
       mealHtml += `<div class="check-btn ${isChecked ? 'completed' : ''}">✓</div>`;
+      mealHtml += '</div>';
+      
       mealHtml += '</div>';
     }
     mealContainer.innerHTML = mealHtml;
@@ -1827,8 +2109,7 @@ function toggleMealDone(mealKey) {
 }
 
 function toggleDayNutrition() {
-  var mappedDay = getMappedDay(activeDay);
-  var meals = MEAL_SCHEDULE[mappedDay] || [];
+  var meals = getActiveMealsForDay(activeDay);
   var currentlyComplete = isDayNutritionComplete(activeDay);
   var targetState = !currentlyComplete;
 
@@ -1931,13 +2212,13 @@ function renderGroceryList() {
 }
 
 /* ========================================================
-   WEIGHT CHECK-IN & MODAL CONTROLS
+   WEIGHT CHECK-IN & MODAL CONTROLS (EDIT & DELETE INCLUDED)
    ======================================================== */
 function openWeightModal() {
   var valEl = document.getElementById('input-weight-val');
   var noteEl = document.getElementById('input-weight-notes');
   var modal = document.getElementById('modal-weight');
-  if (valEl) valEl.value = appState.currentWeight || 84.9;
+  if (valEl) valEl.value = appState.currentWeight !== null ? appState.currentWeight : '';
   if (noteEl) noteEl.value = '';
   if (modal) modal.classList.remove('hidden');
 }
@@ -1953,13 +2234,13 @@ function saveWeightLog() {
   var val = parseFloat(valEl ? valEl.value : NaN);
   var notes = noteEl ? noteEl.value.trim() : '';
 
-  if (!isNaN(val)) {
+  if (!isNaN(val) && val > 0) {
     appState.currentWeight = val;
     if (!appState.weightLogs) appState.weightLogs = [];
     appState.weightLogs.unshift({
       date: new Date().toLocaleDateString([], { month: 'short', day: 'numeric', year: 'numeric' }),
       weight: val,
-      notes: notes || 'Standard check-in'
+      notes: notes || 'Check-in'
     });
     persistState();
     updateWeightHeader();
@@ -1968,9 +2249,76 @@ function saveWeightLog() {
   closeWeightModal();
 }
 
+function openEditWeightModal(index) {
+  if (!appState.weightLogs || !appState.weightLogs[index]) return;
+  editWeightLogIndex = index;
+  var entry = appState.weightLogs[index];
+
+  var valEl = document.getElementById('input-edit-weight-val');
+  var noteEl = document.getElementById('input-edit-weight-notes');
+  var dateLbl = document.getElementById('edit-weight-date-label');
+
+  if (valEl) valEl.value = entry.weight;
+  if (noteEl) noteEl.value = entry.notes || '';
+  if (dateLbl) dateLbl.innerText = `Recorded: ${entry.date}`;
+
+  var modal = document.getElementById('modal-weight-edit');
+  if (modal) modal.classList.remove('hidden');
+}
+
+function closeEditWeightModal() {
+  editWeightLogIndex = null;
+  var modal = document.getElementById('modal-weight-edit');
+  if (modal) modal.classList.add('hidden');
+}
+
+function saveEditedWeightLog() {
+  if (editWeightLogIndex === null || !appState.weightLogs[editWeightLogIndex]) return;
+
+  var valEl = document.getElementById('input-edit-weight-val');
+  var noteEl = document.getElementById('input-edit-weight-notes');
+  var val = parseFloat(valEl ? valEl.value : NaN);
+  var notes = noteEl ? noteEl.value.trim() : '';
+
+  if (!isNaN(val) && val > 0) {
+    appState.weightLogs[editWeightLogIndex].weight = val;
+    appState.weightLogs[editWeightLogIndex].notes = notes || 'Check-in';
+
+    // If latest log was modified, sync current weight
+    if (editWeightLogIndex === 0) {
+      appState.currentWeight = val;
+    }
+
+    persistState();
+    updateWeightHeader();
+    renderTrendsDashboard();
+  }
+  closeEditWeightModal();
+}
+
+function deleteWeightLog(index) {
+  if (!appState.weightLogs || !appState.weightLogs[index]) return;
+
+  if (confirm("Delete this weight check-in entry?")) {
+    appState.weightLogs.splice(index, 1);
+
+    if (appState.weightLogs.length > 0) {
+      appState.currentWeight = parseFloat(appState.weightLogs[0].weight);
+    } else {
+      appState.currentWeight = null;
+    }
+
+    persistState();
+    updateWeightHeader();
+    renderTrendsDashboard();
+  }
+}
+
 function updateWeightHeader() {
   var el = document.getElementById('header-weight-text');
-  if (el) el.innerText = `${(appState.currentWeight || 84.9).toFixed(1)} kg`;
+  if (el) {
+    el.innerText = appState.currentWeight !== null ? `${parseFloat(appState.currentWeight).toFixed(1)} kg` : '-- kg';
+  }
 }
 
 /* ========================================================
@@ -2007,7 +2355,9 @@ function renderTrendsDashboard() {
   var deltaTile = document.getElementById('trend-tile-delta');
   var workoutsTile = document.getElementById('trend-tile-workouts');
 
-  if (latestTile) latestTile.innerText = `${(appState.currentWeight || 84.9).toFixed(1)}kg`;
+  if (latestTile) {
+    latestTile.innerText = appState.currentWeight !== null ? `${parseFloat(appState.currentWeight).toFixed(1)}kg` : '-- kg';
+  }
 
   if (logs.length > 0) {
     var sum = 0;
@@ -2054,8 +2404,7 @@ function renderTrendsDashboard() {
   var daysCounted = 0;
   for (var dayIdx = 0; dayIdx < DAYS.length; dayIdx++) {
     var currentDay = DAYS[dayIdx];
-    var mappedDay = getMappedDay(currentDay);
-    var meals = MEAL_SCHEDULE[mappedDay] || [];
+    var meals = getActiveMealsForDay(currentDay);
     var pLogged = 0;
     for (var mIdx = 0; mIdx < meals.length; mIdx++) {
       var mKey = `meal_${currentDay}_${mIdx}`;
@@ -2158,7 +2507,7 @@ function renderTrendsDashboard() {
     }
   }
 
-  // 6. Render Check-in History List
+  // 6. Render Check-in History List with Edit (✏️) and Delete (✕) Buttons
   var listContainer = document.getElementById('trends-history-list');
   if (listContainer) {
     if (logs.length === 0) {
@@ -2167,12 +2516,16 @@ function renderTrendsDashboard() {
       var html = '';
       for (var j = 0; j < logs.length; j++) {
         var l = logs[j];
-        html += '<div class="row" style="padding: 7px 0; border-bottom: 1px solid #F1F5F9; font-size: 12px;">';
-        html += '<div>';
-        html += `<strong style="color: var(--text-main); font-family: 'JetBrains Mono', monospace;">${parseFloat(l.weight).toFixed(1)} kg</strong> `;
+        html += '<div class="row" style="padding: 8px 0; border-bottom: 1px solid #F1F5F9; font-size: 12px; gap: 8px;">';
+        html += '<div style="flex: 1; min-width: 0;">';
+        html += `<strong style="color: var(--text-main); font-family: \'JetBrains Mono\', monospace;">${parseFloat(l.weight).toFixed(1)} kg</strong> `;
         html += `<span style="color: var(--text-muted); font-size: 11px;">(${l.notes || 'Check-in'})</span>`;
+        html += `<div style="color: #94A3B8; font-size: 10px; font-weight: 600; margin-top: 1px;">${l.date}</div>`;
         html += '</div>';
-        html += `<span style="color: var(--text-muted); font-size: 11px; font-weight: 600;">${l.date}</span>`;
+        html += '<div class="flex-gap" style="gap: 4px; flex-shrink: 0;">';
+        html += `<button onclick="openEditWeightModal(${j})" class="btn btn-outline" style="padding: 4px 8px; font-size: 11px; border-radius: 6px;" title="Edit entry">✏️</button>`;
+        html += `<button onclick="deleteWeightLog(${j})" style="background: none; border: none; color: #EF4444; font-size: 15px; font-weight: 800; cursor: pointer; padding: 2px 6px;" title="Delete entry">✕</button>`;
+        html += '</div>';
         html += '</div>';
       }
       listContainer.innerHTML = html;
@@ -2327,7 +2680,7 @@ function exportMasterAiReviewCSV() {
       csvContent += `${l.date},${l.weight},${escapedNote},${rhr},${soreness},${sleepHrs}\n`;
     }
   } else {
-    csvContent += `${new Date().toLocaleDateString()},84.9,"Baseline Log",${rhr},${soreness},${sleepHrs}\n`;
+    csvContent += `${new Date().toLocaleDateString()},--,"No weight logs",${rhr},${soreness},${sleepHrs}\n`;
   }
 
   var blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
@@ -2663,10 +3016,11 @@ function saveHyroxBenchmark(type) {
    SETTINGS & DATA BACKUP
    ======================================================== */
 function resetCurrentWeek() {
-  if (confirm("Reset current week's workout and nutrition checks? Your custom weight logs and set numbers will remain preserved.")) {
+  if (confirm("Reset current week's workout checks, meal swaps, and day swaps? Your custom weight logs and set numbers will remain preserved.")) {
     appState.dailyTracking = {};
     appState.groceryChecks = {};
     appState.dayMapping = getDefaultDayMapping();
+    appState.mealSchedule = JSON.parse(JSON.stringify(DEFAULT_MEAL_SCHEDULE));
     persistState();
     selectDay(activeDay);
     alert('Week reset successfully!');
