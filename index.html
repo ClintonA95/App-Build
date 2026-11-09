@@ -804,7 +804,7 @@ nav.bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; background: rgba
   </div>
 </div>
 
-<!-- MODAL: SWAP DAY (WITH MINI DROPDOWN & FUTURE CALENDAR DATES) -->
+<!-- MODAL: SWAP DAY (WITH CHRONOLOGICAL DROPDOWN) -->
 <div id="modal-swap" class="modal-overlay hidden">
   <div class="modal-box">
     <div class="row" style="margin-bottom: 12px;">
@@ -822,12 +822,10 @@ nav.bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; background: rgba
 
     <div style="margin-bottom: 14px;">
       <label style="font-size: 11px; font-weight: 700; color: var(--text-muted); display: block; margin-bottom: 6px;">Select Upcoming Day to Swap With:</label>
-      <!-- Mini Dropdown Menu with Future Dates -->
       <select id="swap-future-day-select" onchange="updateSwapPreview(this.value)" style="font-size: 12px; font-weight: 700; padding: 10px 12px;">
       </select>
     </div>
 
-    <!-- Live Preview Box -->
     <div id="swap-preview-box" style="background: #EFF6FF; border: 1px solid #BFDBFE; border-radius: 12px; padding: 12px; margin-bottom: 16px; font-size: 11px; line-height: 1.5; color: #1E40AF;">
     </div>
 
@@ -838,7 +836,7 @@ nav.bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; background: rgba
   </div>
 </div>
 
-<!-- MODAL: SWAP MEAL BETWEEN DAYS -->
+<!-- MODAL: SWAP MEAL BETWEEN DAYS (WITH CHRONOLOGICAL DROPDOWN) -->
 <div id="modal-meal-swap" class="modal-overlay hidden">
   <div class="modal-box">
     <div class="row" style="margin-bottom: 12px;">
@@ -849,21 +847,18 @@ nav.bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; background: rgba
       <button onclick="closeMealSwapModal()" style="background: none; border: none; font-size: 18px; cursor: pointer; color: var(--text-muted);">✕</button>
     </div>
 
-    <!-- Source Meal Card -->
     <div style="background: #F8FAFC; border: 1px solid var(--border-color); border-radius: 12px; padding: 12px; margin-bottom: 12px;">
       <span class="badge badge-blue" style="margin-bottom: 4px;">Source Meal</span>
       <div id="meal-swap-source-title" style="font-size: 13px; font-weight: 800; color: var(--text-main); margin-top: 2px;">Meal</div>
       <div id="meal-swap-source-sub" style="font-size: 11px; font-weight: 700; color: var(--text-muted); font-family: 'JetBrains Mono', monospace; margin-top: 2px;">-- kcal • --g pro</div>
     </div>
 
-    <!-- Target Day Selector -->
     <div style="margin-bottom: 10px;">
       <label style="font-size: 11px; font-weight: 700; color: var(--text-muted); display: block; margin-bottom: 4px;">Swap with Day:</label>
       <select id="meal-swap-target-day-select" onchange="onMealSwapTargetDayChanged(this.value)" style="font-size: 12px; font-weight: 700;">
       </select>
     </div>
 
-    <!-- Target Meal Selector -->
     <div style="margin-bottom: 16px;">
       <label style="font-size: 11px; font-weight: 700; color: var(--text-muted); display: block; margin-bottom: 4px;">Swap with Meal on That Day:</label>
       <select id="meal-swap-target-meal-select" style="font-size: 12px; font-weight: 700;">
@@ -1372,7 +1367,7 @@ function selectDay(day) {
 }
 
 /* ========================================================
-   DAY SWAP MODAL & DROPDOWN (WITH FUTURE DATES)
+   DAY SWAP MODAL & DROPDOWN (CHRONOLOGICAL ORDER FIX)
    ======================================================== */
 function openSwapModal() {
   var activeLabel = document.getElementById('swap-active-day-label');
@@ -1388,9 +1383,12 @@ function openSwapModal() {
 
   var optionsHtml = '';
   var firstTarget = '';
-  for (var i = 0; i < DAYS.length; i++) {
-    var d = DAYS[i];
-    if (d === activeDay) continue;
+  var fromIdx = DAY_INDEX_MAP[activeDay] !== undefined ? DAY_INDEX_MAP[activeDay] : 0;
+
+  // Chronological loop: from tomorrow (+1 day) through +6 days ahead
+  for (var offset = 1; offset <= 6; offset++) {
+    var targetIdx = (fromIdx + offset) % 7;
+    var d = DAYS[targetIdx];
 
     if (!firstTarget) firstTarget = d;
 
@@ -1445,7 +1443,7 @@ function executeDaySwap(targetDay) {
   var planA = appState.dayMapping[activeDay] || activeDay;
   var planB = appState.dayMapping[targetDay] || targetDay;
 
-  // Package deal swap: Exchanges mapped workout & nutrition routine
+  // Package deal swap: Exchanges both workout & nutrition mapping
   appState.dayMapping[activeDay] = planB;
   appState.dayMapping[targetDay] = planA;
 
@@ -1466,7 +1464,7 @@ function resetDaySwaps() {
 }
 
 /* ========================================================
-   MEAL SWAP MODAL & LOGIC (BETWEEN DAYS)
+   MEAL SWAP MODAL & LOGIC (CHRONOLOGICAL ORDER FIX)
    ======================================================== */
 function getActiveMealsForDay(day) {
   var mappedDay = getMappedDay(day);
@@ -1490,9 +1488,12 @@ function openMealSwapModal(day, mealIndex) {
   if (daySelect) {
     var dayOptions = '';
     var firstTargetDay = '';
-    for (var i = 0; i < DAYS.length; i++) {
-      var d = DAYS[i];
-      if (d === day) continue;
+    var fromIdx = DAY_INDEX_MAP[day] !== undefined ? DAY_INDEX_MAP[day] : 0;
+
+    // Chronological loop: from tomorrow (+1 day) through +6 days ahead
+    for (var offset = 1; offset <= 6; offset++) {
+      var targetIdx = (fromIdx + offset) % 7;
+      var d = DAYS[targetIdx];
       if (!firstTargetDay) firstTargetDay = d;
       var fDate = getUpcomingDateForDay(day, d);
       dayOptions += `<option value="${d}">${fDate.formatted}</option>`;
